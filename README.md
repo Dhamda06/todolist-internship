@@ -9,21 +9,17 @@ Website To-Do List sederhana yang dikembangkan dari nol selama internship di **P
 - Hapus tugas
 - Filter tugas (Semua / Selesai / Belum Selesai)
 - Responsive design & UI modern
-- Dark mode (jika tersedia)
+- Dark mode
+- Daftar tugas mode tabel atau kartu
+- Statistik tugas
+- Tugas mendekat
+- Grafik tugas mingguan
 
 ## 🛠️ Teknologi yang Digunakan
 - HTML, CSS, JavaScript
 - PHP 8.x
 - CodeIgniter 3
 - Bootstrap 5
-
-## 📂 Struktur Folder (opsional)
-```
-/application
-/assets
-/public
-/index.php
-```
 
 ## 📸 Cuplikan Tampilan (Screenshots)
 *(Tambahkan gambar tampilan web di sini jika ada)*  
@@ -40,16 +36,12 @@ Juli – Agustus 2025
 
 ## ⚙️ Cara Menjalankan (lokal)
 1. Clone repositori ini:
-   ```bash
    git clone https://github.com/Dhamda06/todolist-internship.git
-   ```
 2. Tempatkan folder di direktori `htdocs/` (jika pakai XAMPP)
 3. Jalankan XAMPP (Apache + MySQL)
 4. Import file database (jika ada)
 5. Akses lewat browser:
-   ```
    http://localhost/todolist
-   ```
 
 ## 📌 Catatan
 - Project ini adalah bagian dari kegiatan magang dan ditujukan sebagai latihan membangun aplikasi CRUD sederhana.
