@@ -8,12 +8,14 @@ Website To-Do List sederhana yang dikembangkan dari nol selama internship di **P
 - Edit nama tugas
 - Hapus tugas
 - Filter tugas (Semua / Selesai / Belum Selesai)
+- Progres tugas (Belum /  Progress / Selesai)
 - Responsive design & UI modern
-- Dark mode
+- Dark mode untuk website
 - Daftar tugas mode tabel atau kartu
-- Statistik tugas
-- Tugas mendekat
-- Grafik tugas mingguan
+- Statistik tugas untuk melihat semua tugas yang ada pada Daftar Tugas dan melihat Prioritas Tugas
+- Tugas mendekat atau lewat deadline
+- Grafik tugas mingguan selama 7 hari
+- Arsip tugas: semua tugas yang telah terhapus di Daftar Tugas
 
 ## 🛠️ Teknologi yang Digunakan
 - HTML, CSS, JavaScript
