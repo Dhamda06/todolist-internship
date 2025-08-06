@@ -3,6 +3,11 @@
 // Seperti: $this->load->view('todo/index', $data);
 // Dan menerima variabel $filter, $priority, $search, $todos (dari get_filtered model)
 
+// Cek apakah pengguna sudah login
+if (!$this->session->userdata('logged_in')) {
+    redirect('todo/landing');
+}
+
 // **PENTING: Pastikan zona waktu diatur dengan benar untuk konsistensi waktu.**
 date_default_timezone_set('Asia/Jakarta'); // Mengatur zona waktu ke WIB (Jakarta)
 
@@ -18,6 +23,10 @@ $current_stats_view = $current_stats_view ?? 'card'; // Default ke 'card' for st
 $current_daily_chart_view = $current_daily_chart_view ?? 'status'; // Default to 'status' for daily chart
 $current_task_view = $current_task_view ?? 'table'; // Tampilan default untuk daftar tugas: 'table' atau 'card'
 $sort = $sort ?? ''; // Default value
+$user_data = $user_data ?? null; // Tambahkan data pengguna untuk halaman Settings
+
+// Ambil URL profile picture dari data user, jika ada. Jika tidak, gunakan default.
+$profile_pic_url = base_url('asset/images/profiles/' . ($user_data->profile_picture ?? 'default_profile.png'));
 
 // Tambahkan variabel untuk data JavaScript jika belum ada
 $all_active_tasks_for_js = $all_active_tasks_for_js ?? [];
@@ -41,6 +50,9 @@ switch ($current_section) {
         break;
     case 'archived':
         $page_title = 'Arsip Tugas';
+        break;
+    case 'settings': // Tambahkan case baru untuk Settings
+        $page_title = 'Pengaturan';
         break;
 }
 
@@ -121,18 +133,18 @@ switch ($current_section) {
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url("<?= base_url('asset/images/cov.jpg'); ?>");
+            background-image: var(--bg-image);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            opacity: 0.9;
+            opacity: var(--bg-opacity, 0.9);
             z-index: -1;
             transition: opacity 0.4s ease-in-out;
         }
         body.dark-mode::before {
-            background-image: url("<?= base_url('asset/images/cov.jpg'); ?>");
-            opacity: 0.2;
+            background-image: var(--bg-image);
+            opacity: var(--bg-opacity-dark, 0.2);
             transition: opacity 0.4s ease-in-out;
         }
         .dark-mode .card {
@@ -750,94 +762,6 @@ switch ($current_section) {
         .dark-mode .task-card.priority-tinggi::before { background-color: var(--priority-high-dark); }
         .dark-mode .task-card.priority-sedang::before { background-color: var(--priority-medium-dark); }
         .dark-mode .task-card.priority-rendah::before { background-color: var(--priority-low-dark); }
-        .task-card .task-title {
-            font-weight: 600;
-            font-size: 1.15rem;
-            margin-bottom: 0.5rem;
-            padding-left: 10px;
-            word-wrap: break-word;
-        }
-        .task-card .task-description {
-            font-size: 0.9rem;
-            color: #6c757d;
-            padding-left: 10px;
-            margin-bottom: 0.75rem;
-            word-wrap: break-word;
-            white-space: pre-wrap;
-        }
-        .dark-mode .task-card .task-description {
-            color: #adb5bd;
-        }
-        .task-card .task-meta {
-            font-size: 0.9rem;
-            color: #6c757d;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 5px;
-            padding-left: 10px;
-            margin-bottom: 1rem;
-        }
-        .dark-mode .task-card .task-meta {
-            color: #adb5bd;
-        }
-        .task-card .task-meta i {
-            font-size: 1rem;
-            margin-right: 0;
-        }
-        .task-card .task-actions {
-            margin-top: 1rem;
-            padding-left: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .task-card-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            padding: 1rem 0;
-        }
-        .task-card-item {
-            background-color: #ffffff;
-            border-radius: 1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .dark-mode .task-card-item {
-            background-color: var(--card-dark);
-            box-shadow: 0 4px 15px var(--shadow-dark-mode);
-        }
-        .task-card-item:hover {
-            transform: none !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
-        }
-        .dark-mode .task-card-item:hover {
-            box-shadow: 0 4px 15px var(--shadow-dark-mode) !important;
-        }
-        .task-card-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 8px;
-            height: 100%;
-            background-color: lightgray;
-            border-top-left-radius: 1rem;
-            border-bottom-left-radius: 1rem;
-        }
-        .task-card-item.priority-tinggi::before { background-color: var(--priority-high-light); }
-        .task-card-item.priority-sedang::before { background-color: var(--priority-medium-light); }
-        .task-card-item.priority-rendah::before { background-color: var(--priority-low-light); }
-        .dark-mode .task-card-item.priority-tinggi::before { background-color: var(--priority-high-dark); }
-        .dark-mode .task-card-item.priority-sedang::before { background-color: var(--priority-medium-dark); }
-        .dark-mode .task-card-item.priority-rendah::before { background-color: var(--priority-low-dark); }
         .task-title, .table-task-title {
             font-weight: 600;
             font-size: 1.15rem;
@@ -917,12 +841,6 @@ switch ($current_section) {
             width: 100%;
             display: flex;
             justify-content: space-between;
-        }
-        .task-card-item .task-actions .btn-group .btn {
-            flex: 1;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0;
         }
         .task-card-item .task-actions .btn-group .btn:first-child {
             border-top-left-radius: 0.5rem;
@@ -1135,6 +1053,139 @@ switch ($current_section) {
         .dark-mode .toast-header.bg-danger {
             background-color: #990000 !important;
         }
+        /* New Styles for Settings Page */
+        .settings-page {
+            padding: 1.5rem 0;
+        }
+        .settings-card {
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            background-color: var(--bg-light);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: 1.25rem;
+            transition: all 0.3s ease;
+        }
+        .dark-mode .settings-card {
+            background-color: var(--card-dark);
+            box-shadow: 0 4px 15px var(--shadow-dark-mode);
+        }
+        .settings-card h4 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary-olive);
+            border-bottom: 2px solid var(--primary-olive);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        .dark-mode .settings-card h4 {
+            color: #A7D129;
+            border-bottom-color: #A7D129;
+        }
+        .settings-card .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .settings-card .profile-section .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-olive);
+            transition: all 0.3s ease;
+        }
+        .dark-mode .settings-card .profile-section .profile-pic {
+            border-color: #A7D129;
+        }
+        .settings-card .profile-section .profile-info {
+            flex-grow: 1;
+        }
+        .settings-card .profile-section .profile-info h5 {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        .settings-card .profile-section .profile-info p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+        .dark-mode .settings-card .profile-section .profile-info p {
+            color: #adb5bd;
+        }
+        .settings-card .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .settings-card .form-label {
+            font-weight: 600;
+        }
+        .settings-card .bg-option {
+            height: 80px;
+            border-radius: 0.75rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        .settings-card .bg-option.active,
+        .settings-card .bg-option:hover {
+            border-color: var(--primary-olive);
+        }
+        .dark-mode .settings-card .bg-option.active,
+        .dark-mode .settings-card .bg-option:hover {
+            border-color: #A7D129;
+        }
+        .settings-card .bg-option.active::after {
+            content: '\f269'; /* bi-check-lg */
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2rem;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        .dark-mode .bg-option[data-bg="none"] {
+            background-color: var(--card-dark);
+            border: 1px dashed var(--text-light);
+        }
+        .settings-card .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 80px;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        .settings-card .theme-toggle.light {
+            background-color: var(--light-gray-card);
+            color: var(--text-dark);
+        }
+        .settings-card .theme-toggle.dark {
+            background-color: var(--dark-gray-card);
+            color: var(--text-light);
+        }
+        .settings-card .theme-toggle.active {
+            border: 3px solid var(--primary-olive);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .settings-card .theme-toggle.active i {
+            transform: scale(1.2);
+            transition: transform 0.2s ease;
+        }
+        @media (max-width: 767.98px) {
+            .settings-card .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1217,19 +1268,19 @@ switch ($current_section) {
                 case 'archived':
                     echo '📦Arsip Tugas';
                     break;
-                default:
-                    echo 'To-Do List';
+                case 'settings':
+                    echo '⚙️ Pengaturan';
                     break;
             }
             ?>
         </h1>
         <nav class="main-nav">
-    <a class="nav-link <?= ($current_section == 'home') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=home">Home</a>
-    <a class="nav-link <?= ($current_section == 'tasks') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=tasks">Daftar Tugas</a>
-    <a class="nav-link <?= ($current_section == 'statistics') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=statistics">Statistik Tugas</a>
-    <a class="nav-link <?= ($current_section == 'archived') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=archived">Arsip Tugas</a>
-    <a class="nav-link" href="<?= site_url('todo/logout') ?>">Logout</a>
-</nav>
+            <a class="nav-link <?= ($current_section == 'home') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=home">Home</a>
+            <a class="nav-link <?= ($current_section == 'tasks') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=tasks">Daftar Tugas</a>
+            <a class="nav-link <?= ($current_section == 'statistics') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=statistics">Statistik Tugas</a>
+            <a class="nav-link <?= ($current_section == 'archived') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=archived">Arsip Tugas</a>
+            <a class="nav-link <?= ($current_section == 'settings') ? 'active' : '' ?>" href="<?= site_url('todo/settings') ?>">Pengaturan</a>
+        </nav>
         <hr class="mb-4">
 
         <?php if ($current_section == 'home'): ?>
@@ -1517,8 +1568,8 @@ switch ($current_section) {
                                             <a href="<?= site_url('todo/set_status/'.$todo->id.'/selesai') ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-outline-success btn-set-status" data-status-type="selesai">Selesai</a>
                                         </div>
                                         <button class="btn btn-sm btn-outline-edit w-100 btn-toggle-edit" type="button" data-bs-toggle="collapse" data-bs-target="#editForm-table-<?= $todo->id ?>" aria-expanded="false" aria-controls="editForm-table-<?= $todo->id ?>">
-    <i class="bi bi-pencil-square me-1"></i> Edit
-</button>
+                                            <i class="bi bi-pencil-square me-1"></i> Edit
+                                        </button>
                                         <a href="<?= site_url('todo/archive/'.$todo->id) ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-sm btn-outline-archive w-100 btn-archive-task">
                                             <i class="bi bi-archive me-1"></i> Arsipkan
                                         </a>
@@ -1648,8 +1699,8 @@ switch ($current_section) {
                                         <a href="<?= site_url('todo/set_status/'.$todo->id.'/selesai') ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-outline-success btn-set-status" data-status-type="selesai">Selesai</a>
                                     </div>
                                     <button class="btn btn-outline-edit toggle-edit-form" type="button" data-bs-toggle="collapse" data-bs-target="#editForm-card-<?= $todo->id ?>" aria-expanded="false" aria-controls="editForm-card-<?= $todo->id ?>">
-    <i class="bi bi-pencil-square me-1"></i> Edit
-</button>
+                                        <i class="bi bi-pencil-square me-1"></i> Edit
+                                    </button>
                                     <div class="collapse" id="editForm-card-<?= $todo->id ?>">
                                         <form action="<?= site_url('todo/edit/'.$todo->id) ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" method="post" class="d-flex flex-column gap-1 form-inline-edit mt-2">
                                             <input type="text" name="task_title" value="<?= htmlspecialchars($todo->title) ?>" class="form-control form-control-sm" required aria-label="Edit Judul Tugas">
@@ -1660,7 +1711,9 @@ switch ($current_section) {
                                                 <option value="sedang" <?= $todo->priority == 'sedang' ? 'selected' : '' ?>>Sedang</option>
                                                 <option value="tinggi" <?= $todo->priority == 'tinggi' ? 'selected' : '' ?>>Tinggi</option>
                                             </select>
-                                            <button type="submit" class="btn btn-sm btn-success w-100 mt-2">💾 Simpan Perubahan</button>
+                                            <button type="submit" class="btn btn-sm btn-success w-100 mt-2">
+                                                <i class="bi bi-save me-1"></i> Simpan
+                                            </button>
                                         </form>
                                     </div>
                                     <a href="<?= site_url('todo/archive/'.$todo->id) ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-outline-archive btn-archive-task">
@@ -1823,6 +1876,83 @@ switch ($current_section) {
                         </div>
                     <?php endforeach ?>
                 <?php endif ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($current_section == 'settings'): ?>
+            <div class="settings-page">
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card settings-card">
+                            <h4><i class="bi bi-person-circle me-2"></i>Informasi Akun</h4>
+                            <div class="profile-section">
+                                <img src="<?= $profile_pic_url ?>" alt="Foto Profil" class="profile-pic" id="profilePic">
+                                <div class="profile-info">
+                                    <h5 id="profileUsername"><?= htmlspecialchars($user_data->username ?? 'Pengguna') ?></h5>
+                                    <p id="profileEmail"><?= htmlspecialchars($user_data->email ?? 'email@contoh.com') ?></p>
+                                    <form id="uploadProfilePicForm" action="<?= site_url('todo/upload_profile_picture') ?>" method="post" enctype="multipart/form-data">
+                                        <label for="profilePicInput" class="btn btn-sm btn-outline-secondary mt-2"><i class="bi bi-image me-2"></i>Ganti Foto Profil</label>
+                                        <input type="file" id="profilePicInput" name="profile_picture" class="d-none" accept="image/*">
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="usernameInput" class="form-label">Username</label>
+                                <input type="text" id="usernameInput" class="form-control" value="<?= htmlspecialchars($user_data->username ?? '') ?>">
+                            </div>
+                            <div class="mb-4">
+                                <label for="emailInput" class="form-label">Email</label>
+                                <input type="email" id="emailInput" class="form-control" value="<?= htmlspecialchars($user_data->email ?? '') ?>">
+                            </div>
+                            <div class="d-grid">
+                                <button class="btn btn-primary" id="saveProfileButton"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="card settings-card">
+                            <h4><i class="bi bi-palette me-2"></i>Tampilan & Estetika</h4>
+                            <div class="form-group">
+                                <label class="form-label">Mode Tampilan</label>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="theme-toggle light" data-mode="light">
+                                            <i class="bi bi-sun-fill me-2"></i>Terang
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="theme-toggle dark" data-mode="dark">
+                                            <i class="bi bi-moon-fill me-2"></i>Gelap
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Latar Belakang</label>
+                                <div class="row g-2">
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="default" style="background-image: url('<?= base_url('asset/images/cov.jpg'); ?>');"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="none"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="bg1" style="background-image: url('<?= base_url('asset/images/bg1.jpg'); ?>');"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="bg2" style="background-image: url('<?= base_url('asset/images/bg2.jpg'); ?>');"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="mt-4"><i class="bi bi-person-gear me-2"></i>Aksi Akun</h4>
+                          
+                            <div class="d-grid mt-4">
+                                <a href="<?= site_url('todo/logout') ?>" class="btn btn-danger w-100"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
     </div>
@@ -2266,7 +2396,6 @@ switch ($current_section) {
             ];
         }
 
-
         dailyChartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -2436,13 +2565,198 @@ switch ($current_section) {
         window.history.replaceState({}, '', url.toString());
     }
 
+    // New function to handle settings page interactions
+    function setupSettingsListeners() {
+        const lightThemeBtn = document.querySelector('.theme-toggle.light');
+        const darkThemeBtn = document.querySelector('.theme-toggle.dark');
+        const bgOptions = document.querySelectorAll('.bg-option');
+        const profilePicInput = document.getElementById('profilePicInput');
+        const profilePic = document.getElementById('profilePic');
+        const saveProfileButton = document.getElementById('saveProfileButton');
+        const usernameInput = document.getElementById('usernameInput');
+        const emailInput = document.getElementById('emailInput');
+
+        // Set initial active state for theme buttons
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        if (isDarkMode) {
+            darkThemeBtn.classList.add('active');
+            lightThemeBtn.classList.remove('active');
+        } else {
+            lightThemeBtn.classList.add('active');
+            darkThemeBtn.classList.remove('active');
+        }
+
+        // Handle theme change buttons
+        lightThemeBtn.addEventListener('click', () => {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('dark-mode', 'false');
+            lightThemeBtn.classList.add('active');
+            darkThemeBtn.classList.remove('active');
+            updateDoughnutChartColors();
+            updateDailyChartColors();
+        });
+
+        darkThemeBtn.addEventListener('click', () => {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('dark-mode', 'true');
+            darkThemeBtn.classList.add('active');
+            lightThemeBtn.classList.remove('active');
+            updateDoughnutChartColors();
+            updateDailyChartColors();
+        });
+
+        // Handle background change
+        bgOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const bgType = option.dataset.bg;
+                bgOptions.forEach(btn => btn.classList.remove('active'));
+                option.classList.add('active');
+                changeBackground(bgType);
+            });
+        });
+
+        function changeBackground(bgType) {
+            let backgroundImage = '';
+            let opacity = '0.9';
+            const isDarkMode = document.body.classList.contains('dark-mode');
+
+            if (bgType === 'default') {
+                backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
+            } else if (bgType === 'bg1') {
+                backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
+            } else if (bgType === 'bg2') {
+                backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
+            } else if (bgType === 'none') {
+                backgroundImage = 'none';
+            }
+
+            if (isDarkMode) {
+                opacity = (bgType === 'none') ? '0' : '0.2';
+            }
+
+            document.documentElement.style.setProperty('--bg-image', backgroundImage);
+            document.documentElement.style.setProperty('--bg-opacity', opacity);
+            document.documentElement.style.setProperty('--bg-opacity-dark', (bgType === 'none') ? '0' : '0.2');
+
+            localStorage.setItem('background-image', bgType);
+        }
+
+        // Apply saved background on load
+        const savedBackground = localStorage.getItem('background-image');
+        if (savedBackground) {
+            bgOptions.forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.bg === savedBackground) {
+                    option.classList.add('active');
+                }
+            });
+            changeBackground(savedBackground);
+        } else {
+            // Set default background if not found
+            changeBackground('default');
+            const defaultBgOption = document.querySelector('.bg-option[data-bg="default"]');
+            if (defaultBgOption) defaultBgOption.classList.add('active');
+        }
+
+        // Profile picture upload handler
+        profilePicInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const formData = new FormData();
+                formData.append('profile_picture', this.files[0]);
+
+                fetch('<?= site_url('todo/upload_profile_picture') ?>', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        profilePic.src = `<?= base_url('asset/images/profiles/') ?>${data.file_name}?t=${new Date().getTime()}`;
+                        showToast('Foto profil berhasil diperbarui!', 'success');
+                        // Update the profile picture in the session (this needs to be handled by the backend)
+                    } else {
+                        showToast(`Gagal mengunggah foto: ${data.error}`, 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Terjadi kesalahan jaringan.', 'danger');
+                });
+            }
+        });
+
+        // Save profile data handler
+        saveProfileButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const newUsername = usernameInput.value;
+            const newEmail = emailInput.value;
+
+            // Validasi sederhana di sisi klien
+            if (!newUsername.trim() || !newEmail.trim()) {
+                showToast('Username dan Email tidak boleh kosong.', 'danger');
+                return;
+            }
+
+            // Gunakan FormData untuk mengirim data ke server
+            const formData = new FormData();
+            formData.append('username', newUsername);
+            formData.append('email', newEmail);
+
+            fetch('<?= site_url('todo/update_profile') ?>', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Informasi profil berhasil diperbarui!', 'success');
+                    // Perbarui tampilan di halaman secara instan
+                    document.getElementById('profileUsername').textContent = newUsername;
+                    document.getElementById('profileEmail').textContent = newEmail;
+                } else {
+                    // Jika ada error dari server (misal: username sudah ada)
+                    // Ambil pesan error dari data.error
+                    let errorMessage = data.error.replace(/<p>|<\/p>/g, '');
+                    showToast(`Gagal memperbarui profil: ${errorMessage}`, 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan jaringan.', 'danger');
+            });
+        });
+    }
+
+
     // --- Initial Setup on DOMContentLoaded ---
     document.addEventListener('DOMContentLoaded', () => {
         const savedMode = localStorage.getItem('dark-mode');
         if (savedMode === 'true' || (savedMode === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.body.classList.add('dark-mode');
-            document.querySelector('#modeToggle i').classList.remove("bi-moon-fill");
-            document.querySelector('#modeToggle i').classList.add("bi-sun-fill");
+            const modeToggleIcon = document.querySelector('#modeToggle i');
+            if (modeToggleIcon) {
+                modeToggleIcon.classList.remove("bi-moon-fill");
+                modeToggleIcon.classList.add("bi-sun-fill");
+            }
+        }
+        
+        // Apply saved background on load
+        const savedBackground = localStorage.getItem('background-image');
+        if (savedBackground) {
+            let backgroundImage = '';
+            if (savedBackground === 'default') {
+                backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
+            } else if (savedBackground === 'bg1') {
+                backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
+            } else if (savedBackground === 'bg2') {
+                backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
+            } else {
+                backgroundImage = 'none';
+            }
+            document.documentElement.style.setProperty('--bg-image', backgroundImage);
+        } else {
+            document.documentElement.style.setProperty('--bg-image', `url('<?= base_url('asset/images/cov.jpg'); ?>')`);
         }
 
         const currentSection = '<?= $current_section ?>';
@@ -2701,6 +3015,11 @@ switch ($current_section) {
                 });
             });
         });
+
+        // Initialize settings page listeners if on settings page
+        if (currentSection === 'settings') {
+            setupSettingsListeners();
+        }
     });
 </script>
 

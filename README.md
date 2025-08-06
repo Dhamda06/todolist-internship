@@ -3,6 +3,8 @@
 Website To-Do List sederhana yang dikembangkan dari nol selama internship di **PT Polystar International**. Aplikasi ini memungkinkan pengguna untuk menambahkan, mengedit, menghapus, dan menandai tugas sebagai selesai.
 
 ## 🚀 Fitur Utama
+- Register
+- Login
 - Tambah tugas baru
 - Tandai tugas sebagai selesai/belum
 - Edit nama tugas
