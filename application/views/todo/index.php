@@ -1224,11 +1224,12 @@ switch ($current_section) {
             ?>
         </h1>
         <nav class="main-nav">
-            <a class="nav-link <?= ($current_section == 'home') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=home">Home</a>
-            <a class="nav-link <?= ($current_section == 'tasks') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=tasks">Daftar Tugas</a>
-            <a class="nav-link <?= ($current_section == 'statistics') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=statistics">Statistik Tugas</a>
-            <a class="nav-link <?= ($current_section == 'archived') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=archived">Arsip Tugas</a>
-        </nav>
+    <a class="nav-link <?= ($current_section == 'home') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=home">Home</a>
+    <a class="nav-link <?= ($current_section == 'tasks') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=tasks">Daftar Tugas</a>
+    <a class="nav-link <?= ($current_section == 'statistics') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=statistics">Statistik Tugas</a>
+    <a class="nav-link <?= ($current_section == 'archived') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=archived">Arsip Tugas</a>
+    <a class="nav-link" href="<?= site_url('todo/logout') ?>">Logout</a>
+</nav>
         <hr class="mb-4">
 
         <?php if ($current_section == 'home'): ?>

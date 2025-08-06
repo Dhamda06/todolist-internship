@@ -12,6 +12,7 @@ class Todo_model extends CI_Model {
     /**
      * Mengambil tugas dari database dengan berbagai opsi filter, pencarian, dan pengurutan.
      *
+     * @param int $user_id ID pengguna yang sedang login.
      * @param string|null $status Filter berdasarkan status ('belum', 'progress', 'selesai').
      * @param string|null $priority Filter berdasarkan prioritas ('rendah', 'sedang', 'tinggi').
      * @param string|null $search Kata kunci pencarian di kolom 'title' dan 'description'.
@@ -20,12 +21,15 @@ class Todo_model extends CI_Model {
      * @param string|null $sort Opsi pengurutan (misal: 'title_asc', 'deadline_desc', 'priority_high').
      * @return array Hasil query sebagai array objek tugas.
      */
-    public function get_filtered($status = null, $priority = null, $search = null, $is_archived = FALSE, $type_filter = null, $sort = null) {
-        // Pilih kolom 'title' dan 'description'
-        $this->db->select('id, title, description, deadline, status, priority, is_archived');
-        $this->db->from($this->table); // Ganti dengan $this->table
+    public function get_filtered($user_id, $status = null, $priority = null, $search = null, $is_archived = FALSE, $type_filter = null, $sort = null) {
+        $this->db->select('id, title, description, deadline, status, priority, is_archived, created_at, updated_at');
+        $this->db->from($this->table);
 
-        $this->db->where('is_archived', $is_archived); // Selalu filter berdasarkan status arsip
+        // Filter utama: HANYA TUGAS MILIK USER YANG SEDANG LOGIN
+        $this->db->where('user_id', $user_id);
+        
+        // Filter berdasarkan status arsip
+        $this->db->where('is_archived', $is_archived);
 
         // Terapkan filter status jika ada
         if ($status) {
@@ -46,22 +50,24 @@ class Todo_model extends CI_Model {
         // Filter khusus untuk halaman home (tugas mendekat/lewat deadline)
         if ($type_filter === 'upcoming_past') {
             $current_time = date('Y-m-d H:i:s');
-            // Menampilkan tugas yang deadline-nya sudah lewat ATAU dalam 7 hari ke depan, dan statusnya belum 'selesai'.
-            // Batasi hasil untuk performa di halaman home.
-            $this->db->where_in('status', ['belum', 'progress']); // Hanya tugas yang belum/progress
-            $this->db->where('deadline <=', date('Y-m-d H:i:s', strtotime('+7 days', strtotime($current_time)))); // Dalam 7 hari ke depan
-            $this->db->or_where('deadline <=', $current_time); // Atau sudah lewat deadline
+            $this->db->where_in('status', ['belum', 'progress']);
+            // Gunakan `group_start` untuk mengelompokkan kondisi OR dengan benar
+            $this->db->group_start();
+            $this->db->where('deadline <=', date('Y-m-d H:i:s', strtotime('+7 days', strtotime($current_time))));
+            $this->db->or_where('deadline <=', $current_time);
+            $this->db->group_end();
             
-            // Limit result for home section to show only a few important tasks
+            // Urutkan berdasarkan deadline terdekat dan limit
+            $this->db->order_by('deadline', 'asc');
             $this->db->limit(6); 
         }
 
         // Logika Pengurutan Dinamis
         switch ($sort) {
-            case 'title_asc': // Ganti 'task_asc' menjadi 'title_asc'
+            case 'title_asc':
                 $this->db->order_by('title', 'ASC');
                 break;
-            case 'title_desc': // Ganti 'task_desc' menjadi 'title_desc'
+            case 'title_desc':
                 $this->db->order_by('title', 'DESC');
                 break;
             case 'deadline_asc':
@@ -71,27 +77,24 @@ class Todo_model extends CI_Model {
                 $this->db->order_by('deadline', 'DESC');
                 break;
             case 'priority_high':
-                // Urutkan prioritas: Tinggi, Sedang, Rendah (secara menurun)
                 $this->db->order_by("FIELD(priority, 'tinggi', 'sedang', 'rendah')", 'ASC', FALSE);
                 break;
             case 'priority_low':
-                // Urutkan prioritas: Rendah, Sedang, Tinggi (secara menaik)
                 $this->db->order_by("FIELD(priority, 'rendah', 'sedang', 'tinggi')", 'ASC', FALSE);
                 break;
             default:
-                // Urutan default jika tidak ada opsi pengurutan yang dipilih atau tidak valid
-                $this->db->order_by('deadline', 'asc'); // Urutkan default berdasarkan deadline terdekat
-                $this->db->order_by("FIELD(priority, 'tinggi', 'sedang', 'rendah')", 'ASC', FALSE); // Lalu berdasarkan prioritas
+                $this->db->order_by('deadline', 'asc');
+                $this->db->order_by("FIELD(priority, 'tinggi', 'sedang', 'rendah')", 'ASC', FALSE);
                 break;
         }
         
-        return $this->db->get()->result(); // Eksekusi query dan kembalikan hasilnya
+        return $this->db->get()->result();
     }
 
     /**
      * Menambahkan tugas baru ke database.
      *
-     * @param array $data Array asosiatif berisi 'title', 'description', 'deadline', 'priority'.
+     * @param array $data Array asosiatif berisi 'title', 'description', 'deadline', 'priority', dan 'user_id'.
      * @return bool TRUE jika berhasil, FALSE jika gagal.
      */
     public function add($data) {
@@ -100,8 +103,9 @@ class Todo_model extends CI_Model {
             'description' => $data['description'],
             'deadline' => $data['deadline'],
             'priority' => $data['priority'],
-            'status' => 'belum', // Status default untuk tugas baru
-            'is_archived' => FALSE // Tugas baru tidak diarsipkan secara default
+            'status' => 'belum',
+            'is_archived' => FALSE,
+            'user_id' => $data['user_id'] // Kolom user_id diisi dari data controller
         ];
         return $this->db->insert($this->table, $insert_data);
     }
@@ -110,17 +114,21 @@ class Todo_model extends CI_Model {
      * Memperbarui detail tugas yang ada.
      *
      * @param int $id ID tugas yang akan diperbarui.
-     * @param array $data Array asosiatif berisi 'title', 'description', 'deadline', 'priority'.
+     * @param array $data Array asosiatif berisi detail tugas yang diperbarui.
+     * @param int $user_id ID pengguna untuk validasi kepemilikan tugas.
      * @return bool TRUE jika berhasil, FALSE jika gagal.
      */
-    public function update($id, $data) {
+    public function update($id, $data, $user_id) {
         $update_data = [
             'title' => $data['title'],
             'description' => $data['description'],
             'deadline' => $data['deadline'],
             'priority' => $data['priority']
         ];
-        return $this->db->where('id', $id)->update($this->table, $update_data);
+        // Pastikan hanya tugas milik user_id yang bisa diperbarui
+        $this->db->where('id', $id);
+        $this->db->where('user_id', $user_id);
+        return $this->db->update($this->table, $update_data);
     }
 
     /**
@@ -128,51 +136,55 @@ class Todo_model extends CI_Model {
      *
      * @param int $id ID tugas.
      * @param string $status Status baru ('belum', 'progress', 'selesai').
+     * @param int $user_id ID pengguna untuk validasi kepemilikan tugas.
      * @return bool TRUE jika berhasil, FALSE jika gagal.
      */
-    public function set_status($id, $status) {
-        return $this->db->where('id', $id)->update($this->table, ['status' => $status]);
+    public function set_status($id, $status, $user_id) {
+        // Pastikan hanya tugas milik user_id yang bisa diperbarui
+        $this->db->where('id', $id);
+        $this->db->where('user_id', $user_id);
+        return $this->db->update($this->table, ['status' => $status, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 
     /**
-     * Mengarsipkan tugas (soft delete) dengan mengubah status 'is_archived' menjadi TRUE.
+     * Mengarsipkan tugas (soft delete).
      *
      * @param int $id ID tugas yang akan diarsipkan.
+     * @param int $user_id ID pengguna untuk validasi kepemilikan tugas.
      * @return bool TRUE jika berhasil, FALSE jika gagal.
      */
-    public function archive_task($id) {
-        return $this->db->where('id', $id)->update($this->table, ['is_archived' => TRUE]);
+    public function archive_task($id, $user_id) {
+        // Pastikan hanya tugas milik user_id yang bisa diarsipkan
+        $this->db->where('id', $id);
+        $this->db->where('user_id', $user_id);
+        return $this->db->update($this->table, ['is_archived' => TRUE, 'archived_at' => date('Y-m-d H:i:s')]);
     }
 
     /**
-     * Mengembalikan tugas dari arsip (unarchive) dengan mengubah status 'is_archived' menjadi FALSE.
+     * Mengembalikan tugas dari arsip.
      *
      * @param int $id ID tugas yang akan dikembalikan.
+     * @param int $user_id ID pengguna untuk validasi kepemilikan tugas.
      * @return bool TRUE jika berhasil, FALSE jika gagal.
      */
-    public function unarchive_task($id) {
-        return $this->db->where('id', $id)->update($this->table, ['is_archived' => FALSE]);
+    public function unarchive_task($id, $user_id) {
+        // Pastikan hanya tugas milik user_id yang bisa dikembalikan
+        $this->db->where('id', $id);
+        $this->db->where('user_id', $user_id);
+        return $this->db->update($this->table, ['is_archived' => FALSE, 'archived_at' => NULL]);
     }
 
     /**
      * Menghapus tugas secara permanen dari database.
      *
      * @param int $id ID tugas yang akan dihapus permanen.
+     * @param int $user_id ID pengguna untuk validasi kepemilikan tugas.
      * @return bool TRUE jika berhasil, FALSE jika gagal.
      */
-    public function permanent_delete($id) {
-        return $this->db->delete($this->table, ['id' => $id]);
-    }
-
-    /**
-     * Mendapatkan semua tugas (aktif dan diarsipkan) untuk perhitungan statistik.
-     *
-     * @return array Hasil query sebagai array objek tugas.
-     */
-    public function get_all_todos_for_stats() {
-        $this->db->select('id, status, priority, is_archived'); // Pastikan mengambil 'is_archived'
-        $this->db->from($this->table);
-        $query = $this->db->get();
-        return $query->result();
+    public function permanent_delete($id, $user_id) {
+        // Pastikan hanya tugas milik user_id yang bisa dihapus permanen
+        $this->db->where('id', $id);
+        $this->db->where('user_id', $user_id);
+        return $this->db->delete($this->table);
     }
 }
