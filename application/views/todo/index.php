@@ -106,6 +106,20 @@ switch ($current_section) {
             --card-priority-low-text-light: #17a2b8;
             --card-priority-low-bg-dark: #0f687a;
             --card-priority-low-text-dark: #b3ecf6;
+            --color-solid-bg1: #495057;
+            --color-solid-bg2: #6B8E23;
+            --color-solid-bg3: #87CEEB;
+            --color-solid-bg4: #F4C2C2;
+            /* New solid colors */
+            --color-solid-bg5: #4B0082; /* Indigo */
+            --color-solid-bg6: #800000; /* Maroon */
+            --color-solid-bg7: #2F4F4F; /* Dark Slate Gray */
+            --color-solid-bg8: #FFD700; /* Gold */
+            /* New image backgrounds */
+            --bg-image-3: url('<?= base_url('asset/images/bg3.jpg'); ?>');
+            --bg-image-4: url('<?= base_url('asset/images/bg4.jpg'); ?>');
+            --bg-image-5: url('<?= base_url('asset/images/bg5.jpg'); ?>');
+            --bg-image-6: url('<?= base_url('asset/images/bg6.jpg'); ?>');
         }
         body {
             overflow-y: scroll;
@@ -134,6 +148,7 @@ switch ($current_section) {
             width: 100%;
             height: 100%;
             background-image: var(--bg-image);
+            background-color: var(--bg-color);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -144,6 +159,7 @@ switch ($current_section) {
         }
         body.dark-mode::before {
             background-image: var(--bg-image);
+            background-color: var(--bg-color-dark);
             opacity: var(--bg-opacity-dark, 0.2);
             transition: opacity 0.4s ease-in-out;
         }
@@ -726,6 +742,11 @@ switch ($current_section) {
         .dark-mode .deadline-soon { color: #ffda6a; }
         .deadline-normal { color: #28a745; white-space: nowrap; }
         .dark-mode .deadline-normal { color: #198754; }
+        
+        /* New styling for finished task deadlines */
+        .deadline-finished-light { color: #212529; white-space: nowrap; }
+        .deadline-finished-dark { color: #adb5bd; white-space: nowrap; }
+
         .task-card {
             background-color: #ffffff;
             border-radius: 1rem;
@@ -1148,21 +1169,70 @@ switch ($current_section) {
             font-size: 2rem;
             text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
-        .dark-mode .bg-option[data-bg="none"] {
+        .bg-color-option {
+            height: 80px;
+            border-radius: 0.75rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .bg-color-option.active, .bg-color-option:hover {
+            border-color: var(--primary-olive);
+        }
+        .dark-mode .bg-color-option.active, .dark-mode .bg-color-option:hover {
+            border-color: #A7D129;
+        }
+        .bg-color-option.active::after {
+            content: '\f269';
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2rem;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        .bg-color-option[data-color="solid-bg1"] { background-color: var(--color-solid-bg1); }
+        .bg-color-option[data-color="solid-bg2"] { background-color: var(--color-solid-bg2); }
+        .bg-color-option[data-color="solid-bg3"] { background-color: var(--color-solid-bg3); }
+        .bg-color-option[data-color="solid-bg4"] { background-color: var(--color-solid-bg4); }
+        /* New color options */
+        .bg-color-option[data-color="solid-bg5"] { background-color: var(--color-solid-bg5); }
+        .bg-color-option[data-color="solid-bg6"] { background-color: var(--color-solid-bg6); }
+        .bg-color-option[data-color="solid-bg7"] { background-color: var(--color-solid-bg7); }
+        .bg-color-option[data-color="solid-bg8"] { background-color: var(--color-solid-bg8); }
+        
+        .settings-card .bg-option[data-bg="none"] {
             background-color: var(--card-dark);
             border: 1px dashed var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .settings-card .bg-option[data-bg="none"]::after {
+            content: 'Tidak ada';
+            font-family: 'Inter', sans-serif;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 600;
+            text-shadow: none;
+        }
+
         .settings-card .theme-toggle {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            height: 80px;
+            /* Perbaikan: Ukuran tombol mode yang lebih kecil */
+            height: 60px; 
             border-radius: 0.75rem;
             cursor: pointer;
             transition: all 0.2s ease;
+            /* Perbaikan: Ukuran font yang lebih kecil */
             font-weight: 600;
-            font-size: 1.2rem;
+            font-size: 1rem; 
         }
         .settings-card .theme-toggle.light {
             background-color: var(--light-gray-card);
@@ -1177,7 +1247,8 @@ switch ($current_section) {
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .settings-card .theme-toggle.active i {
-            transform: scale(1.2);
+            /* Perbaikan: Mengurangi ukuran scale untuk ikon */
+            transform: scale(1.1); 
             transition: transform 0.2s ease;
         }
         @media (max-width: 767.98px) {
@@ -1185,6 +1256,126 @@ switch ($current_section) {
                 flex-direction: column;
                 text-align: center;
             }
+            .settings-card { padding: 1.5rem; }
+        }
+        /* --- New/Improved Card View Styles --- */
+        .task-card-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 0;
+        }
+        .task-card-item {
+            background-color: var(--bg-light);
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+        }
+        .dark-mode .task-card-item {
+            background-color: var(--card-dark);
+            box-shadow: 0 4px 15px var(--shadow-dark-mode);
+        }
+        .task-card-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            border-top-left-radius: 1rem;
+            border-bottom-left-radius: 1rem;
+        }
+        .task-card-item.priority-tinggi::before { background-color: var(--priority-high-light); }
+        .task-card-item.priority-sedang::before { background-color: var(--priority-medium-light); }
+        .task-card-item.priority-rendah::before { background-color: var(--priority-low-light); }
+        .dark-mode .task-card-item.priority-tinggi::before { background-color: var(--priority-high-dark); }
+        .dark-mode .task-card-item.priority-sedang::before { background-color: var(--priority-medium-dark); }
+        .dark-mode .task-card-item.priority-rendah::before { background-color: var(--priority-low-dark); }
+        .task-card-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            padding-left: 10px;
+        }
+        .task-card-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            padding-left: 10px;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dark-mode .task-card-description {
+            color: #adb5bd;
+        }
+        .task-card-meta {
+            margin-top: auto; /* Push meta to the bottom */
+            padding-left: 10px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .dark-mode .task-card-meta {
+            color: #adb5bd;
+        }
+        .task-card-meta .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .task-card-meta .meta-item:last-child {
+            margin-bottom: 0;
+        }
+        .task-card-actions-dropdown {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+        .task-card-actions-dropdown .btn {
+            border: none;
+            background-color: transparent;
+            color: #6c757d;
+        }
+        .dark-mode .task-card-actions-dropdown .btn {
+            color: #adb5bd;
+        }
+        .task-card-actions-dropdown .dropdown-menu {
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .dark-mode .task-card-actions-dropdown .dropdown-menu {
+            background-color: #2a2a2a;
+            border-color: var(--border-dark-mode);
+        }
+        .task-card-actions-dropdown .dropdown-item {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .task-card-actions-dropdown .dropdown-item:hover {
+            background-color: var(--light-gray-card);
+        }
+        .dark-mode .task-card-actions-dropdown .dropdown-item:hover {
+            background-color: #333;
+        }
+        .task-card-actions-dropdown .dropdown-item.text-success:hover {
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+        .task-card-actions-dropdown .dropdown-item.text-danger:hover {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        .task-card-actions-dropdown .dropdown-item.text-info:hover {
+             background-color: rgba(23, 162, 184, 0.1);
         }
     </style>
 </head>
@@ -1203,7 +1394,7 @@ switch ($current_section) {
                 Apakah Anda yakin ingin menghapus tugas ini secara permanen? Aksi ini tidak dapat dibatalkan.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" id="confirmDeleteModalBatal">Batal</button>
                 <button type="button" class="btn btn-danger btn-sm" id="confirmDeleteButton">Hapus Permanen</button>
             </div>
         </div>
@@ -1221,7 +1412,7 @@ switch ($current_section) {
                 Apakah Anda yakin ingin mengarsipkan tugas ini? Anda dapat mengembalikannya nanti.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" id="confirmArchiveModalBatal">Batal</button>
                 <button type="button" class="btn btn-archive btn-sm" id="confirmArchiveButton">Arsipkan</button>
             </div>
         </div>
@@ -1239,16 +1430,52 @@ switch ($current_section) {
                 Apakah Anda yakin ingin mengembalikan tugas ini dari arsip?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" id="confirmUnarchiveModalBatal">Batal</button>
                 <button type="button" class="btn btn-primary btn-sm" id="confirmUnarchiveButton">Kembalikan</button>
             </div>
         </div>
     </div>
 </div>
 
-<button class="toggle-mode" onclick="toggleMode()" id="modeToggle" aria-label="Toggle dark mode">
-    <i class="bi bi-moon-fill"></i>
-</button>
+<div class="modal fade" id="editTaskCardModal" tabindex="-1" aria-labelledby="editTaskCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editTaskCardModalLabel">Edit Tugas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editTaskCardForm" method="post" action="">
+                <div class="modal-body">
+                    <input type="hidden" name="task_id" id="editTaskIdCard">
+                    <div class="mb-3">
+                        <label for="editTaskTitleCard" class="form-label">Judul Tugas</label>
+                        <input type="text" name="task_title" id="editTaskTitleCard" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTaskDescriptionCard" class="form-label">Deskripsi</label>
+                        <textarea name="task_description" id="editTaskDescriptionCard" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDeadlineCard" class="form-label">Deadline</label>
+                        <input type="datetime-local" name="deadline" id="editDeadlineCard" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPriorityCard" class="form-label">Prioritas</label>
+                        <select name="priority" id="editPriorityCard" class="form-select" required>
+                            <option value="rendah">Rendah</option>
+                            <option value="sedang">Sedang</option>
+                            <option value="tinggi">Tinggi</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="card">
@@ -1338,7 +1565,11 @@ switch ($current_section) {
                             $interval = $now_date->diff($deadline_obj);
                             $days_diff = (int)$interval->format('%r%a');
                             
-                            if ($deadline_obj < $now_date && $todo->status !== 'selesai') {
+                            if ($todo->status == 'selesai') {
+                                $deadline_class = 'deadline-finished-light';
+                                $deadline_icon = '<i class="bi bi-check-lg me-1 text-success"></i>';
+                                $deadline_display_text = date('d-m-Y H:i', strtotime($todo->deadline));
+                            } elseif ($deadline_obj < $now_date) {
                                 $deadline_class = 'deadline-overdue';
                                 $deadline_icon = '<i class="bi bi-exclamation-circle-fill text-danger me-1"></i>';
                                 $deadline_display_text = date('d-m-Y H:i', strtotime($todo->deadline)) . ' (Tugas Lewat Deadline!)';
@@ -1518,7 +1749,10 @@ switch ($current_section) {
                                         $interval = $now_date->diff($deadline_obj);
                                         $days_diff = (int)$interval->format('%r%a');
 
-                                        if ($deadline_obj < $now_date && $todo->status !== 'selesai') {
+                                        if ($todo->status == 'selesai') {
+                                            $deadline_class = 'deadline-finished-light';
+                                            echo '<span class="' . $deadline_class . '"><i class="bi bi-check-lg me-1 text-success"></i> ' . date('d-m-Y H:i', strtotime($todo->deadline)) . '</span>';
+                                        } elseif ($deadline_obj < $now_date) {
                                             $deadline_class = 'deadline-overdue';
                                             echo '<span class="' . $deadline_class . '"><i class="bi bi-exclamation-circle-fill me-1"></i> ' . date('d-m-Y H:i', strtotime($todo->deadline)) . '</span>';
                                         } elseif ($days_diff <= 3) {
@@ -1570,9 +1804,9 @@ switch ($current_section) {
                                         <button class="btn btn-sm btn-outline-edit w-100 btn-toggle-edit" type="button" data-bs-toggle="collapse" data-bs-target="#editForm-table-<?= $todo->id ?>" aria-expanded="false" aria-controls="editForm-table-<?= $todo->id ?>">
                                             <i class="bi bi-pencil-square me-1"></i> Edit
                                         </button>
-                                        <a href="<?= site_url('todo/archive/'.$todo->id) ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-sm btn-outline-archive w-100 btn-archive-task">
+                                        <button class="btn btn-sm btn-outline-archive w-100 btn-archive-task" type="button" data-id="<?= $todo->id ?>" data-bs-toggle="modal" data-bs-target="#confirmArchiveModal">
                                             <i class="bi bi-archive me-1"></i> Arsipkan
-                                        </a>
+                                        </button>
                                     </div>
                                     
                                     <div class="collapse mt-2" id="editForm-table-<?= $todo->id ?>">
@@ -1652,73 +1886,68 @@ switch ($current_section) {
                                 $interval = $now_date->diff($deadline_obj);
                                 $days_diff = (int)$interval->format('%r%a');
 
-                                if ($deadline_obj < $now_date && $todo->status !== 'selesai') {
+                                if ($todo->status == 'selesai') {
+                                    $deadline_class = 'deadline-finished-light';
+                                    $deadline_icon = 'bi-check-lg text-success';
+                                    $deadline_display_text = date('d-m-Y H:i', strtotime($todo->deadline));
+                                } elseif ($deadline_obj < $now_date) {
                                     $deadline_class = 'deadline-overdue';
-                                    $deadline_icon = '<i class="bi bi-exclamation-circle-fill text-danger me-1"></i>';
+                                    $deadline_icon = 'bi-exclamation-circle-fill text-danger';
                                     $deadline_display_text = date('d-m-Y H:i', strtotime($todo->deadline)) . ' (Lewat Deadline!)';
                                 } elseif ($days_diff <= 3) {
                                     $deadline_class = 'deadline-soon';
-                                    $deadline_icon = '<i class="bi bi-hourglass-split text-warning me-1"></i>';
+                                    $deadline_icon = 'bi-hourglass-split text-warning';
                                     $deadline_display_text = date('d-m-Y H:i', strtotime($todo->deadline)) . ' (Segera!)';
                                 } else {
                                     $deadline_class = 'deadline-normal';
-                                    $deadline_icon = '<i class="bi bi-calendar-check text-success me-1"></i>';
+                                    $deadline_icon = 'bi-calendar-check text-success';
                                     $deadline_display_text = date('d-m-Y H:i', strtotime($todo->deadline));
                                 }
                                 $priorityClass = 'priority-' . strtolower($todo->priority);
+                                $priorityIcon = '';
+                                switch(strtolower($todo->priority)) {
+                                    case 'tinggi': $priorityIcon = 'bi-exclamation-octagon-fill'; break;
+                                    case 'sedang': $priorityIcon = 'bi-flag-fill'; break;
+                                    case 'rendah': $priorityIcon = 'bi-bookmark-fill'; break;
+                                }
                             ?>
                             <div class="task-card-item priority-<?= strtolower($todo->priority) ?>">
-                                <div>
-                                    <h6 class="task-title m-0 p-0"><?= htmlspecialchars($todo->title) ?></h6>
-                                    <p class="task-description"><?= nl2br(htmlspecialchars($todo->description)) ?></p>
-                                    
-                                    <div class="task-meta">
-                                        <span class="d-flex align-items-center">
-                                            <i class="bi bi-clock-history me-2"></i>
-                                            <span class="<?= $deadline_class ?>"><?= $deadline_icon ?><?= $deadline_display_text ?></span>
-                                        </span>
-                                        <span class="d-flex align-items-center">
-                                            <i class="bi bi-flag-fill me-2"></i>
-                                            <span class="priority-label <?= $priorityClass ?>"><?= ucfirst($todo->priority) ?></span>
-                                        </span>
-                                        <span class="d-flex align-items-center">
-                                            <i class="bi bi-info-circle me-2"></i>
-                                            <span class="badge bg-<?=
-                                                $todo->status == 'selesai' ? 'success' :
-                                                ($todo->status == 'progress' ? 'warning text-dark' : 'secondary')
-                                            ?> task-status-badge">
-                                                <?= ucfirst($todo->status) ?>
-                                            </span>
-                                        </span>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="task-card-title"><?= htmlspecialchars($todo->title) ?></h6>
+                                    <div class="dropdown task-card-actions-dropdown">
+                                        <button class="btn btn-sm btn-link text-decoration-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><h6 class="dropdown-header">Ubah Status</h6></li>
+                                            <li><a class="dropdown-item btn-set-status text-secondary" href="<?= site_url('todo/set_status/'.$todo->id.'/belum') ?>?section=tasks&task_view=card" data-status-type="belum"><i class="bi bi-hourglass-split me-2"></i>Belum</a></li>
+                                            <li><a class="dropdown-item btn-set-status text-warning" href="<?= site_url('todo/set_status/'.$todo->id.'/progress') ?>?section=tasks&task_view=card" data-status-type="progress"><i class="bi bi-arrow-repeat me-2"></i>Progress</a></li>
+                                            <li><a class="dropdown-item btn-set-status text-success" href="<?= site_url('todo/set_status/'.$todo->id.'/selesai') ?>?section=tasks&task_view=card" data-status-type="selesai"><i class="bi bi-check-circle-fill me-2"></i>Selesai</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-primary btn-edit-task-card" href="#" data-bs-toggle="modal" data-bs-target="#editTaskCardModal" data-id="<?= $todo->id ?>" data-title="<?= htmlspecialchars($todo->title) ?>" data-description="<?= htmlspecialchars($todo->description) ?>" data-deadline="<?= date('Y-m-d\TH:i', strtotime($todo->deadline)) ?>" data-priority="<?= strtolower($todo->priority) ?>"><i class="bi bi-pencil-square me-2"></i>Edit Tugas</a></li>
+                                            <li><a class="dropdown-item text-danger btn-archive-task" href="#" data-id="<?= $todo->id ?>" data-bs-toggle="modal" data-bs-target="#confirmArchiveModal"><i class="bi bi-archive me-2"></i>Arsipkan</a></li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="task-actions mt-auto d-flex flex-column gap-2">
-                                    <div class="btn-group btn-group-sm w-100" role="group">
-                                        <a href="<?= site_url('todo/set_status/'.$todo->id.'/belum') ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-outline-secondary btn-set-status" data-status-type="belum">Belum</a>
-                                        <a href="<?= site_url('todo/set_status/'.$todo->id.'/progress') ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-outline-warning btn-set-status" data-status-type="progress">Progress</a>
-                                        <a href="<?= site_url('todo/set_status/'.$todo->id.'/selesai') ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-outline-success btn-set-status" data-status-type="selesai">Selesai</a>
+                                <p class="task-card-description"><?= nl2br(htmlspecialchars($todo->description)) ?></p>
+                                <div class="task-card-meta">
+                                    <div class="meta-item">
+                                        <i class="bi <?= $deadline_icon ?>"></i>
+                                        <span class="<?= $deadline_class ?>"><?= $deadline_display_text ?></span>
                                     </div>
-                                    <button class="btn btn-outline-edit toggle-edit-form" type="button" data-bs-toggle="collapse" data-bs-target="#editForm-card-<?= $todo->id ?>" aria-expanded="false" aria-controls="editForm-card-<?= $todo->id ?>">
-                                        <i class="bi bi-pencil-square me-1"></i> Edit
-                                    </button>
-                                    <div class="collapse" id="editForm-card-<?= $todo->id ?>">
-                                        <form action="<?= site_url('todo/edit/'.$todo->id) ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" method="post" class="d-flex flex-column gap-1 form-inline-edit mt-2">
-                                            <input type="text" name="task_title" value="<?= htmlspecialchars($todo->title) ?>" class="form-control form-control-sm" required aria-label="Edit Judul Tugas">
-                                            <textarea name="task_description" class="form-control form-control-sm" rows="2" aria-label="Edit Deskripsi Tugas"><?= htmlspecialchars($todo->description) ?></textarea>
-                                            <input type="datetime-local" name="deadline" value="<?= date('Y-m-d\TH:i', strtotime($todo->deadline)) ?>" class="form-control form-control-sm" required aria-label="Edit Deadline Tugas">
-                                            <select name="priority" class="form-select form-select-sm" required aria-label="Edit Prioritas Tugas">
-                                                <option value="rendah" <?= $todo->priority == 'rendah' ? 'selected' : '' ?>>Rendah</option>
-                                                <option value="sedang" <?= $todo->priority == 'sedang' ? 'selected' : '' ?>>Sedang</option>
-                                                <option value="tinggi" <?= $todo->priority == 'tinggi' ? 'selected' : '' ?>>Tinggi</option>
-                                            </select>
-                                            <button type="submit" class="btn btn-sm btn-success w-100 mt-2">
-                                                <i class="bi bi-save me-1"></i> Simpan
-                                            </button>
-                                        </form>
+                                    <div class="meta-item">
+                                        <i class="bi <?= $priorityIcon ?>"></i>
+                                        <span class="priority-label <?= $priorityClass ?>"><?= ucfirst($todo->priority) ?></span>
                                     </div>
-                                    <a href="<?= site_url('todo/archive/'.$todo->id) ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-outline-archive btn-archive-task">
-                                        <i class="bi bi-archive me-1"></i> Arsipkan
-                                    </a>
+                                    <div class="meta-item">
+                                        <i class="bi bi-info-circle"></i>
+                                        <span class="badge bg-<?=
+                                            $todo->status == 'selesai' ? 'success' :
+                                            ($todo->status == 'progress' ? 'warning text-dark' : 'secondary')
+                                        ?> task-status-badge">
+                                            <?= ucfirst($todo->status) ?>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         <?php endforeach ?>
@@ -1736,7 +1965,7 @@ switch ($current_section) {
                         onclick="toggleStatsView('chart')">Tampilan Diagram Lingkaran</button>
             </div>
             
-            <div id="cardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center <?= ($current_stats_view == 'chart') ? 'd-none' : '' ?>">
+            <div id="cardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center <?= ($current_stats_view == 'card') ? 'd-none' : '' ?>">
                 <div class="col">
                     <div class="p-3 rounded-3 stats-card belum">
                         <i class="bi bi-hourglass-split stats-icon"></i>
@@ -1810,74 +2039,67 @@ switch ($current_section) {
         <?php endif; ?>
 
         <?php if ($current_section == 'archived'): ?>
-            <h5 class="section-title">📦 Tugas Yang Diarsipkan</h5>
-            <div id="archivedTaskCardContainer" class="task-card-list">
-                <?php if (empty($archived_todos)): ?>
-                    <div class="alert alert-info text-center empty-state w-100" role="alert" style="grid-column: 1 / -1;">
-                        <i class="bi bi-emoji-sunglasses me-2"></i> Tidak ada tugas yang diarsipkan.
-                    </div>
-                <?php else: ?>
-                    <?php foreach ($archived_todos as $todo): ?>
-                        <?php
-                            $deadline_class = '';
-                            $deadline_icon = '';
-                            $deadline_display_text = '';
-                            $deadline_obj = new DateTime($todo->deadline);
-                            $now_date = new DateTime();
-                            $interval = $now_date->diff($deadline_obj);
-                            $days_diff = (int)$interval->format('%r%a');
+    <h5 class="section-title"><i class="bi bi-box-seam me-2"></i> Arsip Tugas</h5>
 
-                            if ($deadline_obj < $now_date) {
-                                $deadline_class = 'deadline-overdue';
-                                $deadline_icon = '<i class="bi bi-exclamation-circle-fill text-danger me-1"></i>';
-                                $deadline_display_text = date('d-m-Y H:i', strtotime($todo->deadline)) . ' (Lewat Deadline!)';
-                            } elseif ($days_diff <= 3) {
-                                $deadline_class = 'deadline-soon';
-                                $deadline_icon = '<i class="bi bi-hourglass-split text-warning me-1"></i>';
-                                $deadline_display_text = date('d-m-Y H:i', strtotime($todo->deadline)) . ' (Segera!)';
-                            } else {
-                                $deadline_class = 'deadline-normal';
-                                $deadline_icon = '<i class="bi bi-calendar-check text-success me-1"></i>';
-                                $deadline_display_text = date('d-m-Y H:i', strtotime($todo->deadline));
-                            }
-                            $priorityClass = 'priority-' . strtolower($todo->priority);
-                        ?>
-                        <div class="task-card-item priority-<?= strtolower($todo->priority) ?>">
-                            <div>
-                                <h6 class="task-title"><?= htmlspecialchars($todo->title) ?></h6>
-                                <p class="task-description"><?= nl2br(htmlspecialchars($todo->description)) ?></p>
-                                <div class="task-meta mb-2">
-                                    <span class="d-flex align-items-center">
-                                        <i class="bi bi-clock-history me-2"></i>
-                                        <span class="<?= $deadline_class ?>"><?= $deadline_icon ?><?= $deadline_display_text ?></span>
-                                    </span>
-                                    <span class="d-flex align-items-center mt-2">
-                                        <i class="bi bi-box-seam me-2"></i>
-                                        <small class="task-archived-at text-muted">Diarsipkan: <?= isset($todo->archived_at) ? date('d-m-Y H:i', strtotime($todo->archived_at)) : 'Tidak Tersedia' ?></small>
-                                    </span>
-                                    <span class="d-flex align-items-center mt-2">
-                                        <i class="bi bi-flag-fill me-2"></i>
-                                        <span class="priority-label <?= $priorityClass ?>"><?= ucfirst($todo->priority) ?></span>
-                                    </span>
-                                    <span class="d-flex align-items-center mt-2">
-                                        <i class="bi bi-info-circle me-2"></i>
-                                        <span class="badge bg-secondary task-status-badge">Diarsipkan</span>
-                                    </span>
-                                </div>
+    <?php if (empty($archived_todos)): ?>
+        <div class="alert alert-info text-center empty-state" role="alert">
+            <i class="bi bi-emoji-sunglasses me-2"></i> Tidak ada tugas yang diarsipkan.
+        </div>
+    <?php else: ?>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="archivedTaskGrid">
+            <?php foreach ($archived_todos as $todo): ?>
+                <?php
+                    $priority_class = 'priority-' . strtolower($todo->priority);
+                    $priority_icon = '';
+                    switch(strtolower($todo->priority)) {
+                        case 'tinggi': $priority_icon = 'bi-exclamation-octagon-fill'; break;
+                        case 'sedang': $priority_icon = 'bi-flag-fill'; break;
+                        case 'rendah': $priority_icon = 'bi-bookmark-fill'; break;
+                    }
+                ?>
+                <div class="col" id="archived-task-card-<?= $todo->id ?>">
+                    <div class="card h-100 p-4 task-card <?= $priority_class ?>">
+                        <div class="card-body p-0">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="card-title fw-bold m-0 text-truncate" title="<?= htmlspecialchars($todo->title) ?>">
+                                    <?= htmlspecialchars($todo->title) ?>
+                                </h6>
+                                <span class="badge rounded-pill bg-secondary text-white ms-2">
+                                    <i class="bi bi-archive-fill me-1"></i> Diarsipkan
+                                </span>
                             </div>
-                            <div class="task-actions mt-auto d-flex flex-column gap-2">
-                                <a href="<?= site_url('todo/unarchive/'.$todo->id) ?>?section=archived" class="btn btn-primary w-100 btn-unarchive-task">
-                                    <i class="bi bi-arrow-return-left me-1"></i> Kembalikan
-                                </a>
-                                <a href="<?= site_url('todo/permanent_delete/'.$todo->id) ?>?section=archived" class="btn btn-danger w-100 btn-permanent-delete-task">
-                                    <i class="bi bi-trash-fill me-1"></i> Hapus Permanen
-                                </a>
-                            </div>
+                            <p class="card-text text-muted mb-3" style="font-size: 0.9rem; min-height: 40px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                <?= nl2br(htmlspecialchars($todo->description)) ?>
+                            </p>
+                            <ul class="list-unstyled mb-3">
+                                <li class="d-flex align-items-center mb-1 text-muted">
+                                    <i class="bi bi-calendar-check me-2 text-primary"></i>
+                                    <small>Deadline: <?= date('d-m-Y H:i', strtotime($todo->deadline)) ?></small>
+                                </li>
+                                <li class="d-flex align-items-center mb-1">
+                                    <i class="bi <?= $priority_icon ?> me-2 <?= $priority_class ?>"></i>
+                                    <small class="priority-label <?= $priority_class ?>"><?= ucfirst($todo->priority) ?></small>
+                                </li>
+                                <li class="d-flex align-items-center text-muted">
+                                    <i class="bi bi-clock-history me-2"></i>
+                                    <small>Diarsipkan: <?= isset($todo->archived_at) ? date('d-m-Y', strtotime($todo->archived_at)) : 'N/A' ?></small>
+                                </li>
+                            </ul>
                         </div>
-                    <?php endforeach ?>
-                <?php endif ?>
-            </div>
-        <?php endif; ?>
+                        <div class="card-footer bg-transparent border-0 p-0 d-flex flex-column gap-2">
+                            <button type="button" class="btn btn-primary btn-sm btn-unarchive-task" data-bs-toggle="modal" data-bs-target="#confirmUnarchiveModal" data-id="<?= $todo->id ?>">
+                                <i class="bi bi-arrow-return-left me-1"></i> Kembalikan
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm btn-permanent-delete-task" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-id="<?= $todo->id ?>">
+                                <i class="bi bi-trash-fill me-1"></i> Hapus Permanen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach ?>
+        </div>
+    <?php endif ?>
+<?php endif; ?>
 
         <?php if ($current_section == 'settings'): ?>
             <div class="settings-page">
@@ -1930,23 +2152,64 @@ switch ($current_section) {
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Latar Belakang</label>
+                                
+                                <h6 class="text-muted fw-bold mt-3"><i class="bi bi-images me-2"></i>Pilih Gambar</h6>
+                                <div class="row g-2 mb-3">
+    <div class="col-3">
+        <div class="bg-option" data-bg="none"></div>
+    </div>
+    <div class="col-3">
+        <div class="bg-option" data-bg="default" style="background-image: url('<?= base_url('asset/images/cov.jpg'); ?>');"></div>
+    </div>
+    <div class="col-3">
+        <div class="bg-option" data-bg="bg1" style="background-image: url('<?= base_url('asset/images/bg1.jpg'); ?>');"></div>
+    </div>
+    <div class="col-3">
+        <div class="bg-option" data-bg="bg2" style="background-image: url('<?= base_url('asset/images/bg2.jpg'); ?>');"></div>
+    </div>
+    <div class="col-3">
+        <div class="bg-option" data-bg="bg3" style="background-image: var(--bg-image-3);"></div>
+    </div>
+    <div class="col-3">
+        <div class="bg-option" data-bg="bg4" style="background-image: var(--bg-image-4);"></div>
+    </div>
+    <div class="col-3">
+        <div class="bg-option" data-bg="bg5" style="background-image: var(--bg-image-5);"></div>
+    </div>
+    <div class="col-3">
+        <div class="bg-option" data-bg="bg6" style="background-image: var(--bg-image-6);"></div>
+    </div>
+</div>
+                                
+                                <h6 class="text-muted fw-bold"><i class="bi bi-palette-fill me-2"></i>Pilih Warna Solid</h6>
                                 <div class="row g-2">
                                     <div class="col-3">
-                                        <div class="bg-option" data-bg="default" style="background-image: url('<?= base_url('asset/images/cov.jpg'); ?>');"></div>
+                                        <div class="bg-color-option" data-color="solid-bg1"></div>
                                     </div>
                                     <div class="col-3">
-                                        <div class="bg-option" data-bg="none"></div>
+                                        <div class="bg-color-option" data-color="solid-bg2"></div>
                                     </div>
                                     <div class="col-3">
-                                        <div class="bg-option" data-bg="bg1" style="background-image: url('<?= base_url('asset/images/bg1.jpg'); ?>');"></div>
+                                        <div class="bg-color-option" data-color="solid-bg3"></div>
                                     </div>
                                     <div class="col-3">
-                                        <div class="bg-option" data-bg="bg2" style="background-image: url('<?= base_url('asset/images/bg2.jpg'); ?>');"></div>
+                                        <div class="bg-color-option" data-color="solid-bg4"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-color-option" data-color="solid-bg5"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-color-option" data-color="solid-bg6"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-color-option" data-color="solid-bg7"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-color-option" data-color="solid-bg8"></div>
                                     </div>
                                 </div>
                             </div>
                             <h4 class="mt-4"><i class="bi bi-person-gear me-2"></i>Aksi Akun</h4>
-                          
                             <div class="d-grid mt-4">
                                 <a href="<?= site_url('todo/logout') ?>" class="btn btn-danger w-100"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
                             </div>
@@ -2052,7 +2315,8 @@ switch ($current_section) {
         const icon = document.querySelector('#modeToggle i');
         icon.classList.toggle("bi-moon-fill");
         icon.classList.toggle("bi-sun-fill");
-        if (document.body.classList.contains('dark-mode')) {
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        if (isDarkMode) {
             localStorage.setItem('dark-mode', 'true');
         } else {
             localStorage.setItem('dark-mode', 'false');
@@ -2063,6 +2327,20 @@ switch ($current_section) {
         if (dailyChartInstance) {
             createDailyTaskChart(new URLSearchParams(window.location.search).get('daily_chart_view') || 'status');
         }
+        // Update settings UI
+        const lightThemeBtn = document.querySelector('.theme-toggle.light');
+        const darkThemeBtn = document.querySelector('.theme-toggle.dark');
+        if (isDarkMode) {
+            darkThemeBtn.classList.add('active');
+            lightThemeBtn.classList.remove('active');
+        } else {
+            lightThemeBtn.classList.add('active');
+            darkThemeBtn.classList.remove('active');
+        }
+        // Re-apply background with new mode
+        const currentBgType = localStorage.getItem('background-type') || 'image';
+        const currentBgValue = localStorage.getItem('background-value') || 'default';
+        applyBackground(currentBgType, currentBgValue, isDarkMode);
     }
 
     // --- Data & Statistics Functions ---
@@ -2570,6 +2848,7 @@ switch ($current_section) {
         const lightThemeBtn = document.querySelector('.theme-toggle.light');
         const darkThemeBtn = document.querySelector('.theme-toggle.dark');
         const bgOptions = document.querySelectorAll('.bg-option');
+        const bgColorOptions = document.querySelectorAll('.bg-color-option');
         const profilePicInput = document.getElementById('profilePicInput');
         const profilePic = document.getElementById('profilePic');
         const saveProfileButton = document.getElementById('saveProfileButton');
@@ -2594,6 +2873,10 @@ switch ($current_section) {
             darkThemeBtn.classList.remove('active');
             updateDoughnutChartColors();
             updateDailyChartColors();
+            // Re-apply background with new mode
+            const currentBgType = localStorage.getItem('background-type') || 'image';
+            const currentBgValue = localStorage.getItem('background-value') || 'default';
+            applyBackground(currentBgType, currentBgValue, false);
         });
 
         darkThemeBtn.addEventListener('click', () => {
@@ -2603,60 +2886,113 @@ switch ($current_section) {
             lightThemeBtn.classList.remove('active');
             updateDoughnutChartColors();
             updateDailyChartColors();
+            // Re-apply background with new mode
+            const currentBgType = localStorage.getItem('background-type') || 'image';
+            const currentBgValue = localStorage.getItem('background-value') || 'default';
+            applyBackground(currentBgType, currentBgValue, true);
         });
-
-        // Handle background change
-        bgOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                const bgType = option.dataset.bg;
-                bgOptions.forEach(btn => btn.classList.remove('active'));
-                option.classList.add('active');
-                changeBackground(bgType);
-            });
-        });
-
-        function changeBackground(bgType) {
+        
+        function applyBackground(type, value, isDarkMode) {
             let backgroundImage = '';
-            let opacity = '0.9';
-            const isDarkMode = document.body.classList.contains('dark-mode');
+            let backgroundColor = '';
+            let opacity = type === 'image' ? (isDarkMode ? '0.2' : '0.9') : '0';
+            
+            // Reset properties first
+            document.documentElement.style.removeProperty('--bg-image');
+            document.documentElement.style.removeProperty('--bg-color');
+            document.documentElement.style.removeProperty('--bg-color-dark');
+            document.documentElement.style.removeProperty('--bg-opacity');
+            document.documentElement.style.removeProperty('--bg-opacity-dark');
 
-            if (bgType === 'default') {
-                backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
-            } else if (bgType === 'bg1') {
-                backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
-            } else if (bgType === 'bg2') {
-                backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
-            } else if (bgType === 'none') {
-                backgroundImage = 'none';
+            if (type === 'image') {
+                if (value === 'default') {
+                    backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
+                } else if (value === 'bg1') {
+                    backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
+                } else if (value === 'bg2') {
+                    backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
+                } else if (value === 'bg3') {
+                    backgroundImage = `var(--bg-image-3)`;
+                } else if (value === 'bg4') {
+                    backgroundImage = `var(--bg-image-4)`;
+                } else if (value === 'bg5') {
+                    backgroundImage = `var(--bg-image-5)`;
+                } else if (value === 'bg6') {
+                    backgroundImage = `var(--bg-image-6)`;
+                }
+                document.documentElement.style.setProperty('--bg-image', backgroundImage);
+                document.documentElement.style.setProperty('--bg-opacity', opacity);
+                document.documentElement.style.setProperty('--bg-opacity-dark', opacity);
+            } else if (type === 'color') {
+                backgroundColor = `var(--color-${value})`;
+                document.documentElement.style.setProperty('--bg-color', backgroundColor);
+                document.documentElement.style.setProperty('--bg-color-dark', backgroundColor);
+                document.documentElement.style.setProperty('--bg-opacity', '1');
+                document.documentElement.style.setProperty('--bg-opacity-dark', '1');
+            } else if (value === 'none') {
+                 document.documentElement.style.setProperty('--bg-opacity', '0');
+                 document.documentElement.style.setProperty('--bg-opacity-dark', '0');
             }
-
-            if (isDarkMode) {
-                opacity = (bgType === 'none') ? '0' : '0.2';
-            }
-
-            document.documentElement.style.setProperty('--bg-image', backgroundImage);
-            document.documentElement.style.setProperty('--bg-opacity', opacity);
-            document.documentElement.style.setProperty('--bg-opacity-dark', (bgType === 'none') ? '0' : '0.2');
-
-            localStorage.setItem('background-image', bgType);
         }
 
-        // Apply saved background on load
-        const savedBackground = localStorage.getItem('background-image');
-        if (savedBackground) {
-            bgOptions.forEach(option => {
-                option.classList.remove('active');
-                if (option.dataset.bg === savedBackground) {
-                    option.classList.add('active');
+        // Handle background image change
+        bgOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const bgValue = option.dataset.bg;
+                
+                // Reset active state for all options
+                document.querySelectorAll('.bg-option, .bg-color-option').forEach(btn => btn.classList.remove('active'));
+                
+                option.classList.add('active');
+                
+                let isDarkMode = document.body.classList.contains('dark-mode');
+                
+                if (bgValue === 'none') {
+                    applyBackground('none', 'none', isDarkMode);
+                    localStorage.setItem('background-type', 'none');
+                    localStorage.setItem('background-value', 'none');
+                } else {
+                    applyBackground('image', bgValue, isDarkMode);
+                    localStorage.setItem('background-type', 'image');
+                    localStorage.setItem('background-value', bgValue);
                 }
             });
-            changeBackground(savedBackground);
+        });
+
+        // Handle background color change
+        bgColorOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const colorValue = option.dataset.color;
+                
+                // Reset active state for all options
+                document.querySelectorAll('.bg-option, .bg-color-option').forEach(btn => btn.classList.remove('active'));
+                
+                option.classList.add('active');
+                
+                let isDarkMode = document.body.classList.contains('dark-mode');
+                applyBackground('color', colorValue, isDarkMode);
+                localStorage.setItem('background-type', 'color');
+                localStorage.setItem('background-value', colorValue);
+            });
+        });
+        
+        // Apply saved background on load
+        const savedBgType = localStorage.getItem('background-type');
+        const savedBgValue = localStorage.getItem('background-value');
+        const isDarkModeOnLoad = document.body.classList.contains('dark-mode');
+        if (savedBgType && savedBgValue) {
+             applyBackground(savedBgType, savedBgValue, isDarkModeOnLoad);
+             const activeElement = document.querySelector(`[data-${savedBgType === 'image' ? 'bg' : 'color'}="${savedBgValue}"]`);
+             if (activeElement) {
+                 activeElement.classList.add('active');
+             }
         } else {
-            // Set default background if not found
-            changeBackground('default');
+            // Set default if no settings are saved
+            applyBackground('image', 'default', isDarkModeOnLoad);
             const defaultBgOption = document.querySelector('.bg-option[data-bg="default"]');
             if (defaultBgOption) defaultBgOption.classList.add('active');
         }
+
 
         // Profile picture upload handler
         profilePicInput.addEventListener('change', function() {
@@ -2728,7 +3064,6 @@ switch ($current_section) {
         });
     }
 
-
     // --- Initial Setup on DOMContentLoaded ---
     document.addEventListener('DOMContentLoaded', () => {
         const savedMode = localStorage.getItem('dark-mode');
@@ -2742,21 +3077,50 @@ switch ($current_section) {
         }
         
         // Apply saved background on load
-        const savedBackground = localStorage.getItem('background-image');
-        if (savedBackground) {
-            let backgroundImage = '';
-            if (savedBackground === 'default') {
-                backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
-            } else if (savedBackground === 'bg1') {
-                backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
-            } else if (savedBackground === 'bg2') {
-                backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
-            } else {
-                backgroundImage = 'none';
-            }
-            document.documentElement.style.setProperty('--bg-image', backgroundImage);
+        const savedBgType = localStorage.getItem('background-type');
+        const savedBgValue = localStorage.getItem('background-value');
+        const isDarkModeOnLoad = document.body.classList.contains('dark-mode');
+        if (savedBgType && savedBgValue) {
+             let backgroundImage = '';
+             let backgroundColor = '';
+             if (savedBgType === 'image') {
+                 if (savedBgValue === 'default') {
+                     backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
+                 } else if (savedBgValue === 'bg1') {
+                     backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
+                 } else if (savedBgValue === 'bg2') {
+                     backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
+                 } else if (savedBgValue === 'bg3') {
+                     backgroundImage = `var(--bg-image-3)`;
+                 } else if (savedBgValue === 'bg4') {
+                     backgroundImage = `var(--bg-image-4)`;
+                 } else if (savedBgValue === 'bg5') {
+                    backgroundImage = `var(--bg-image-5)`;
+                } else if (savedBgValue === 'bg6') {
+                    backgroundImage = `var(--bg-image-6)`;
+                }
+                 document.documentElement.style.setProperty('--bg-image', backgroundImage);
+                 document.documentElement.style.setProperty('--bg-opacity', isDarkModeOnLoad ? '0.2' : '0.9');
+                 document.documentElement.style.setProperty('--bg-opacity-dark', isDarkModeOnLoad ? '0.2' : '0.9');
+             } else if (savedBgType === 'color') {
+                 backgroundColor = `var(--color-${savedBgValue})`;
+                 document.documentElement.style.setProperty('--bg-color', backgroundColor);
+                 document.documentElement.style.setProperty('--bg-color-dark', backgroundColor);
+                 document.documentElement.style.setProperty('--bg-opacity', '1');
+                 document.documentElement.style.setProperty('--bg-opacity-dark', '1');
+             } else if (savedBgType === 'none') {
+                 document.documentElement.style.setProperty('--bg-opacity', '0');
+                 document.documentElement.style.setProperty('--bg-opacity-dark', '0');
+             }
+             const activeElement = document.querySelector(`[data-${savedBgType === 'image' ? 'bg' : 'color'}="${savedBgValue}"]`);
+             if (activeElement) {
+                 activeElement.classList.add('active');
+             }
         } else {
-            document.documentElement.style.setProperty('--bg-image', `url('<?= base_url('asset/images/cov.jpg'); ?>')`);
+            // Set default if no settings are saved
+            applyBackground('image', 'default', isDarkModeOnLoad);
+            const defaultBgOption = document.querySelector('.bg-option[data-bg="default"]');
+            if (defaultBgOption) defaultBgOption.classList.add('active');
         }
 
         const currentSection = '<?= $current_section ?>';
@@ -2883,6 +3247,93 @@ switch ($current_section) {
                         });
                 });
             });
+            
+            // Event listener untuk tombol "Arsipkan" yang memicu modal
+            document.querySelectorAll('.btn-archive-task').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const taskId = this.getAttribute('data-id');
+                    const archiveUrl = `<?= site_url('todo/archive/') ?>${taskId}?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>`;
+                    const confirmButton = document.getElementById('confirmArchiveButton');
+
+                    // Simpan URL ke tombol konfirmasi
+                    confirmButton.dataset.actionUrl = archiveUrl;
+                });
+            });
+
+            // Event listener untuk tombol "Arsipkan" di dalam modal
+            document.getElementById('confirmArchiveButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                const archiveUrl = this.dataset.actionUrl;
+                
+                const archiveModal = bootstrap.Modal.getInstance(document.getElementById('confirmArchiveModal'));
+                archiveModal.hide();
+                
+                fetch(archiveUrl)
+                    .then(response => {
+                        if (response.ok) {
+                            showToast('Tugas berhasil diarsipkan!', 'warning');
+                            setTimeout(() => { window.location.reload(); }, 1000);
+                        } else {
+                            throw new Error('Gagal mengarsipkan tugas.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast(error.message, 'danger');
+                    });
+            });
+
+             // Event listener untuk tombol Edit di Card View
+            document.querySelectorAll('.btn-edit-task-card').forEach(button => {
+                button.addEventListener('click', function() {
+                    const taskId = this.getAttribute('data-id');
+                    const taskTitle = this.getAttribute('data-title');
+                    const taskDescription = this.getAttribute('data-description');
+                    const taskDeadline = this.getAttribute('data-deadline');
+                    const taskPriority = this.getAttribute('data-priority');
+
+                    const form = document.getElementById('editTaskCardForm');
+                    const modal = document.getElementById('editTaskCardModal');
+
+                    document.getElementById('editTaskIdCard').value = taskId;
+                    document.getElementById('editTaskTitleCard').value = taskTitle;
+                    document.getElementById('editTaskDescriptionCard').value = taskDescription;
+                    document.getElementById('editDeadlineCard').value = taskDeadline;
+                    document.getElementById('editPriorityCard').value = taskPriority;
+
+                    form.action = `<?= site_url('todo/edit/') ?>${taskId}?section=tasks&task_view=card`;
+                    
+                    const editModal = new bootstrap.Modal(modal);
+                    editModal.show();
+                });
+            });
+
+            // Handle submit form edit di modal
+            document.getElementById('editTaskCardForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+                const taskId = document.getElementById('editTaskIdCard').value;
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Gagal memperbarui tugas.');
+                    }
+                })
+                .then(() => {
+                    showToast('Tugas berhasil diperbarui!', 'success');
+                    setTimeout(() => { window.location.reload(); }, 1000);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast(error.message, 'danger');
+                });
+            });
         }
         
         const flashMessage = `<?= htmlspecialchars($flash_message ?? '') ?>`;
@@ -2904,10 +3355,11 @@ switch ($current_section) {
             }
         });
 
-        document.querySelectorAll('.btn-permanent-delete-task').forEach(link => {
-            link.addEventListener('click', function(e) {
+        document.querySelectorAll('.btn-permanent-delete-task').forEach(button => {
+            button.addEventListener('click', function(e) {
                 e.preventDefault();
-                const deleteUrl = this.href;
+                const taskId = this.getAttribute('data-id');
+                const deleteUrl = `<?= site_url('todo/permanent_delete/') ?>${taskId}?section=archived`;
                 const confirmButton = document.getElementById('confirmDeleteButton');
                 confirmButton.onclick = function() {
                     const deleteModal = bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal'));
@@ -2930,36 +3382,12 @@ switch ($current_section) {
             });
         });
 
-        document.querySelectorAll('.btn-archive-task').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const archiveUrl = this.href;
-                const confirmButton = document.getElementById('confirmArchiveButton');
-                confirmButton.onclick = function() {
-                    const archiveModal = bootstrap.Modal.getInstance(document.getElementById('confirmArchiveModal'));
-                    archiveModal.hide();
-                    fetch(archiveUrl)
-                        .then(response => {
-                            if (response.ok) {
-                                showToast('Tugas berhasil diarsipkan!', 'warning');
-                                setTimeout(() => { window.location.reload(); }, 1000);
-                            } else {
-                                throw new Error('Gagal mengarsipkan tugas.');
-                            }
-                        })
-                        .catch(error => {
-                            showToast(error.message, 'danger');
-                        });
-                };
-                const archiveModal = new bootstrap.Modal(document.getElementById('confirmArchiveModal'));
-                archiveModal.show();
-            });
-        });
 
-        document.querySelectorAll('.btn-unarchive-task').forEach(link => {
-            link.addEventListener('click', function(e) {
+        document.querySelectorAll('.btn-unarchive-task').forEach(button => {
+            button.addEventListener('click', function(e) {
                 e.preventDefault();
-                const unarchiveUrl = this.href;
+                const taskId = this.getAttribute('data-id');
+                const unarchiveUrl = `<?= site_url('todo/unarchive/') ?>${taskId}?section=archived`;
                 const confirmButton = document.getElementById('confirmUnarchiveButton');
                 confirmButton.onclick = function() {
                     const unarchiveModal = bootstrap.Modal.getInstance(document.getElementById('confirmUnarchiveModal'));
@@ -3020,6 +3448,16 @@ switch ($current_section) {
         if (currentSection === 'settings') {
             setupSettingsListeners();
         }
+
+        // Add event listeners for the "Batal" buttons to reload the page
+        const batalButtons = document.querySelectorAll('#confirmDeleteModalBatal, #confirmUnarchiveModalBatal, #confirmArchiveModalBatal');
+        batalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modalId = button.getAttribute('data-bs-target');
+                const modal = new bootstrap.Modal(document.querySelector(modalId));
+                modal.hide();
+            });
+        });
     });
 </script>
 
