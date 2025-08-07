@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Variabel CSS untuk kemudahan tema */
         :root {
             --primary-olive: #6B8E23;
             --secondary-olive: #556B2F;
@@ -73,8 +74,8 @@
         }
 
         .register-header h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            font-weight: 800;
             color: transparent;
             background-image: var(--gradient-main);
             background-clip: text;
@@ -84,7 +85,7 @@
         
         .register-header p {
             color: #6c757d;
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin: 0;
         }
         
@@ -104,7 +105,7 @@
         .form-control {
             border-radius: 0.75rem;
             transition: all 0.3s ease;
-            padding: 0.75rem 1.25rem;
+            padding: 0.9rem 1.25rem;
             background-color: #f1f3f5;
             border: 1px solid #dee2e6;
         }
@@ -120,7 +121,6 @@
             border-color: var(--primary-olive);
             background-color: #fff;
         }
-
         .dark-mode .form-control:focus {
             box-shadow: 0 0 0 0.25rem rgba(167, 209, 41, 0.25);
             background-color: #2e3a47;
@@ -132,8 +132,8 @@
             border: none;
             color: white;
             font-weight: 700;
-            font-size: 1.1rem;
-            padding: 0.75rem 1.5rem;
+            font-size: 1.2rem;
+            padding: 1rem 1.5rem;
             border-radius: 0.75rem;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(107, 142, 35, 0.3);
@@ -143,7 +143,92 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(107, 142, 35, 0.4);
         }
+
+        /* ----- Perbaikan Ukuran Notifikasi ----- */
+        .alert {
+            background-color: #ffebee;
+            border: 1px solid #ef9a9a;
+            color: #c62828;
+            padding: 0.75rem 1.25rem; /* Ukuran padding lebih kecil */
+            border-radius: 1rem; /* Sudut sedikit melengkung */
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.15);
+            font-weight: 600;
+            font-size: 0.9rem; /* Ukuran font lebih kecil */
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInSlideDown 0.6s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Tampilan Notifikasi Success */
+        .alert-success {
+            background-color: #e8f5e9;
+            border-color: #81c784;
+            color: #2e7d32;
+        }
+        .alert-success i {
+            color: #43a047;
+        }
+
+        /* Tampilan Notifikasi Info */
+        .alert-info {
+            background-color: #e3f2fd;
+            border-color: #64b5f6;
+            color: #1976d2;
+        }
+        .alert-info i {
+            color: #2196f3;
+        }
         
+        .dark-mode .alert {
+            background-color: #5d2b2b;
+            border-color: #8c3b3b;
+            color: #ffcdd2;
+            box-shadow: 0 4px 15px rgba(229, 57, 53, 0.25);
+        }
+        .dark-mode .alert-success {
+            background-color: #384e3a;
+            border-color: #4a674e;
+            color: #c8e6c9;
+        }
+        .dark-mode .alert-success i {
+            color: #81c784;
+        }
+        .dark-mode .alert-info {
+            background-color: #2c3e50;
+            border-color: #4a677a;
+            color: #bbdefb;
+        }
+        .dark-mode .alert-info i {
+            color: #64b5f6;
+        }
+
+
+        .alert i {
+            font-size: 1.25rem; /* Ukuran ikon lebih kecil */
+            margin-right: 0.75rem; /* Jarak ikon lebih kecil */
+        }
+
+        @keyframes fadeInSlideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert.fade-out {
+            animation: fadeOutSlideUp 0.5s ease-in forwards;
+        }
+
+        @keyframes fadeOutSlideUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-30px); }
+        }
+        /* ------------------------------------------- */
+
         .login-link a {
             color: var(--primary-olive);
             font-weight: 600;
@@ -159,24 +244,35 @@
             text-decoration: underline;
         }
 
-        .alert {
-            border-radius: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            animation: slideInDown 0.5s ease-out;
-        }
-
-        @keyframes slideInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .input-group-text {
             cursor: pointer;
+            border-top-left-radius: 0.75rem;
+            border-bottom-left-radius: 0.75rem;
+            background-color: #e9ecef;
         }
+
+        .dark-mode .input-group-text {
+            background-color: #3b4554;
+            border-color: #4a5568;
+            color: var(--text-light);
+        }
+
+        .input-group-text.toggle-password {
+            background-color: #e9ecef;
+            border-top-right-radius: 0.75rem;
+            border-bottom-right-radius: 0.75rem;
+            border-left: none;
+        }
+
+        .dark-mode .input-group-text.toggle-password {
+            background-color: #3b4554;
+            border-color: #4a5568;
+        }
+
         .input-group-text i {
             transition: color 0.3s ease;
         }
+
         .input-group-text i:hover {
             color: var(--primary-olive);
         }
@@ -190,8 +286,20 @@
         </div>
 
         <?php if (!empty($flash_message)): ?>
-            <div class="alert alert-<?= $flash_type ?> text-center" role="alert">
-                <i class="bi bi-info-circle me-2"></i><?= $flash_message ?>
+            <div id="alert-notification" class="alert alert-<?= $flash_type ?> text-center" role="alert">
+                <?php
+                    // Pilih ikon berdasarkan jenis notifikasi
+                    $icon_class = 'bi-info-circle';
+                    if ($flash_type === 'success') {
+                        $icon_class = 'bi-check-circle';
+                    } elseif ($flash_type === 'danger') {
+                        $icon_class = 'bi-x-circle';
+                    } elseif ($flash_type === 'warning') {
+                        $icon_class = 'bi-exclamation-triangle';
+                    }
+                ?>
+                <i class="bi <?= $icon_class ?> me-2"></i>
+                <span><?= $flash_message ?></span>
             </div>
         <?php endif; ?>
 
@@ -239,6 +347,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Logika untuk menampilkan/menyembunyikan password
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
             const togglePassconf = document.getElementById('togglePassconf');
@@ -251,13 +360,28 @@
                 iconElement.classList.toggle('bi-eye-slash');
             }
 
-            togglePassword.addEventListener('click', function() {
-                toggleVisibility(passwordInput, this.querySelector('i'));
-            });
+            if (togglePassword) {
+                togglePassword.addEventListener('click', function() {
+                    toggleVisibility(passwordInput, this.querySelector('i'));
+                });
+            }
 
-            togglePassconf.addEventListener('click', function() {
-                toggleVisibility(passconfInput, this.querySelector('i'));
-            });
+            if (togglePassconf) {
+                togglePassconf.addEventListener('click', function() {
+                    toggleVisibility(passconfInput, this.querySelector('i'));
+                });
+            }
+
+            // Logika untuk notifikasi otomatis hilang
+            const alertElement = document.querySelector('.alert');
+            if (alertElement) {
+                setTimeout(() => {
+                    alertElement.classList.add('fade-out');
+                    setTimeout(() => {
+                        alertElement.remove();
+                    }, 500); // Waktu yang sama dengan durasi transisi CSS
+                }, 5000); // Notifikasi akan hilang setelah 5 detik
+            }
         });
     </script>
 </body>

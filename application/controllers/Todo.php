@@ -133,7 +133,8 @@ class Todo extends CI_Controller {
         $this->form_validation->set_rules('passconf', 'Konfirmasi Password', 'required|matches[password]');
 
         if ($this->form_validation->run() == FALSE) {
-            $this->session->set_flashdata('message', validation_errors());
+            // Perbaikan ada di sini: Ganti validation_errors() dengan pesan kustom
+            $this->session->set_flashdata('message', 'Terdapat kesalahan saat pengisian data. Mohon periksa kembali input Anda.');
             $this->session->set_flashdata('type', 'danger');
             redirect('todo/register');
         } else {
@@ -280,7 +281,8 @@ class Todo extends CI_Controller {
         $this->form_validation->set_rules('priority', 'Prioritas', 'required|in_list[rendah,sedang,tinggi]');
 
         if ($this->form_validation->run() == FALSE) {
-            $this->session->set_flashdata('message', validation_errors());
+            // Perbaikan ada di sini: Ganti validation_errors()
+            $this->session->set_flashdata('message', 'Gagal menambahkan tugas. Mohon periksa kembali input Anda.');
             $this->session->set_flashdata('type', 'danger');
         } else {
             $data = array(
@@ -310,7 +312,8 @@ class Todo extends CI_Controller {
         $this->form_validation->set_rules('priority', 'Prioritas', 'required|in_list[rendah,sedang,tinggi]');
 
         if ($this->form_validation->run() == FALSE) {
-            $this->session->set_flashdata('message', validation_errors());
+            // Perbaikan ada di sini: Ganti validation_errors()
+            $this->session->set_flashdata('message', 'Gagal memperbarui tugas. Mohon periksa kembali input Anda.');
             $this->session->set_flashdata('type', 'danger');
         } else {
             $data = array(
