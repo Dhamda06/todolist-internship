@@ -1115,6 +1115,7 @@ switch ($current_section) {
             object-fit: cover;
             border: 3px solid var(--primary-olive);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         .dark-mode .settings-card .profile-section .profile-pic {
             border-color: #A7D129;
@@ -1226,13 +1227,13 @@ switch ($current_section) {
             justify-content: center;
             width: 100%;
             /* Perbaikan: Ukuran tombol mode yang lebih kecil */
-            height: 60px; 
+            height: 60px;
             border-radius: 0.75rem;
             cursor: pointer;
             transition: all 0.2s ease;
             /* Perbaikan: Ukuran font yang lebih kecil */
             font-weight: 600;
-            font-size: 1rem; 
+            font-size: 1rem;
         }
         .settings-card .theme-toggle.light {
             background-color: var(--light-gray-card);
@@ -1248,7 +1249,7 @@ switch ($current_section) {
         }
         .settings-card .theme-toggle.active i {
             /* Perbaikan: Mengurangi ukuran scale untuk ikon */
-            transform: scale(1.1); 
+            transform: scale(1.1);
             transition: transform 0.2s ease;
         }
         @media (max-width: 767.98px) {
@@ -1382,6 +1383,20 @@ switch ($current_section) {
 <body>
 
 <div class="toast-container" id="toastContainer"></div>
+
+<div class="modal fade" id="profilePicModal" tabindex="-1" aria-labelledby="profilePicModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="profilePicModalLabel">Foto Profil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="<?= $profile_pic_url ?>" alt="Foto Profil" class="img-fluid rounded-circle" style="max-width: 100%; height: auto;">
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -1965,7 +1980,7 @@ switch ($current_section) {
                         onclick="toggleStatsView('chart')">Tampilan Diagram Lingkaran</button>
             </div>
             
-            <div id="cardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center <?= ($current_stats_view == 'card') ? 'd-none' : '' ?>">
+            <div id="cardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center <?= ($current_stats_view == 'card') ? 'd-block' : 'd-none' ?>">
                 <div class="col">
                     <div class="p-3 rounded-3 stats-card belum">
                         <i class="bi bi-hourglass-split stats-icon"></i>
@@ -1989,7 +2004,7 @@ switch ($current_section) {
                 </div>
             </div>
 
-            <div id="chartStatsContainer" class="mb-4 <?= ($current_stats_view == 'card') ? 'd-none' : '' ?>">
+            <div id="chartStatsContainer" class="mb-4 <?= ($current_stats_view == 'chart') ? 'd-block' : 'd-none' ?>">
                 <div id="doughnutChartWrapper">
                     <canvas id="taskStatusChart"></canvas>
                 </div>
@@ -2108,7 +2123,7 @@ switch ($current_section) {
                         <div class="card settings-card">
                             <h4><i class="bi bi-person-circle me-2"></i>Informasi Akun</h4>
                             <div class="profile-section">
-                                <img src="<?= $profile_pic_url ?>" alt="Foto Profil" class="profile-pic" id="profilePic">
+                                <img src="<?= $profile_pic_url ?>" alt="Foto Profil" class="profile-pic" id="profilePic" data-bs-toggle="modal" data-bs-target="#profilePicModal">
                                 <div class="profile-info">
                                     <h5 id="profileUsername"><?= htmlspecialchars($user_data->username ?? 'Pengguna') ?></h5>
                                     <p id="profileEmail"><?= htmlspecialchars($user_data->email ?? 'email@contoh.com') ?></p>
@@ -2330,12 +2345,14 @@ switch ($current_section) {
         // Update settings UI
         const lightThemeBtn = document.querySelector('.theme-toggle.light');
         const darkThemeBtn = document.querySelector('.theme-toggle.dark');
-        if (isDarkMode) {
-            darkThemeBtn.classList.add('active');
-            lightThemeBtn.classList.remove('active');
-        } else {
-            lightThemeBtn.classList.add('active');
-            darkThemeBtn.classList.remove('active');
+        if (lightThemeBtn && darkThemeBtn) {
+            if (isDarkMode) {
+                darkThemeBtn.classList.add('active');
+                lightThemeBtn.classList.remove('active');
+            } else {
+                lightThemeBtn.classList.add('active');
+                darkThemeBtn.classList.remove('active');
+            }
         }
         // Re-apply background with new mode
         const currentBgType = localStorage.getItem('background-type') || 'image';
@@ -2773,6 +2790,8 @@ switch ($current_section) {
 
         if (view === 'card') {
             cardContainer.classList.remove('d-none');
+            cardContainer.classList.add('d-block');
+            chartContainer.classList.remove('d-block');
             chartContainer.classList.add('d-none');
             toggleCardBtn.classList.add('btn-olive');
             toggleCardBtn.classList.remove('btn-outline-olive');
@@ -2780,8 +2799,10 @@ switch ($current_section) {
             toggleChartBtn.classList.add('btn-outline-olive');
             if (doughnutChartInstance) doughnutChartInstance.destroy();
         } else if (view === 'chart') {
+            cardContainer.classList.remove('d-block');
             cardContainer.classList.add('d-none');
             chartContainer.classList.remove('d-none');
+            chartContainer.classList.add('d-block');
             toggleCardBtn.classList.remove('btn-olive');
             toggleCardBtn.classList.add('btn-outline-olive');
             toggleChartBtn.classList.add('btn-olive');
@@ -2857,12 +2878,14 @@ switch ($current_section) {
 
         // Set initial active state for theme buttons
         const isDarkMode = document.body.classList.contains('dark-mode');
-        if (isDarkMode) {
-            darkThemeBtn.classList.add('active');
-            lightThemeBtn.classList.remove('active');
-        } else {
-            lightThemeBtn.classList.add('active');
-            darkThemeBtn.classList.remove('active');
+        if (lightThemeBtn && darkThemeBtn) {
+            if (isDarkMode) {
+                darkThemeBtn.classList.add('active');
+                lightThemeBtn.classList.remove('active');
+            } else {
+                lightThemeBtn.classList.add('active');
+                darkThemeBtn.classList.remove('active');
+            }
         }
 
         // Handle theme change buttons
@@ -2981,7 +3004,37 @@ switch ($current_section) {
         const savedBgValue = localStorage.getItem('background-value');
         const isDarkModeOnLoad = document.body.classList.contains('dark-mode');
         if (savedBgType && savedBgValue) {
-             applyBackground(savedBgType, savedBgValue, isDarkModeOnLoad);
+             let backgroundImage = '';
+             let backgroundColor = '';
+             if (savedBgType === 'image') {
+                 if (savedBgValue === 'default') {
+                     backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
+                 } else if (savedBgValue === 'bg1') {
+                     backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
+                 } else if (savedBgValue === 'bg2') {
+                     backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
+                 } else if (savedBgValue === 'bg3') {
+                     backgroundImage = `var(--bg-image-3)`;
+                 } else if (savedBgValue === 'bg4') {
+                     backgroundImage = `var(--bg-image-4)`;
+                 } else if (savedBgValue === 'bg5') {
+                    backgroundImage = `var(--bg-image-5)`;
+                } else if (savedBgValue === 'bg6') {
+                    backgroundImage = `var(--bg-image-6)`;
+                }
+                 document.documentElement.style.setProperty('--bg-image', backgroundImage);
+                 document.documentElement.style.setProperty('--bg-opacity', isDarkModeOnLoad ? '0.2' : '0.9');
+                 document.documentElement.style.setProperty('--bg-opacity-dark', isDarkModeOnLoad ? '0.2' : '0.9');
+             } else if (savedBgType === 'color') {
+                 backgroundColor = `var(--color-${savedBgValue})`;
+                 document.documentElement.style.setProperty('--bg-color', backgroundColor);
+                 document.documentElement.style.setProperty('--bg-color-dark', backgroundColor);
+                 document.documentElement.style.setProperty('--bg-opacity', '1');
+                 document.documentElement.style.setProperty('--bg-opacity-dark', '1');
+             } else if (savedBgType === 'none') {
+                 document.documentElement.style.setProperty('--bg-opacity', '0');
+                 document.documentElement.style.setProperty('--bg-opacity-dark', '0');
+             }
              const activeElement = document.querySelector(`[data-${savedBgType === 'image' ? 'bg' : 'color'}="${savedBgValue}"]`);
              if (activeElement) {
                  activeElement.classList.add('active');
@@ -2995,73 +3048,72 @@ switch ($current_section) {
 
 
         // Profile picture upload handler
-        profilePicInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const formData = new FormData();
-                formData.append('profile_picture', this.files[0]);
+        if (profilePicInput) {
+            profilePicInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const formData = new FormData();
+                    formData.append('profile_picture', this.files[0]);
 
-                fetch('<?= site_url('todo/upload_profile_picture') ?>', {
+                    fetch('<?= site_url('todo/upload_profile_picture') ?>', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            profilePic.src = `<?= base_url('asset/images/profiles/') ?>${data.file_name}?t=${new Date().getTime()}`;
+                            showToast('Foto profil berhasil diperbarui!', 'success');
+                        } else {
+                            showToast(`Gagal mengunggah foto: ${data.error}`, 'danger');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('Terjadi kesalahan jaringan.', 'danger');
+                    });
+                }
+            });
+        }
+
+        // Save profile data handler
+        if (saveProfileButton) {
+            saveProfileButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const newUsername = usernameInput.value;
+                const newEmail = emailInput.value;
+
+                // Validasi sederhana di sisi klien
+                if (!newUsername.trim() || !newEmail.trim()) {
+                    showToast('Username dan Email tidak boleh kosong.', 'danger');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('username', newUsername);
+                formData.append('email', newEmail);
+
+                fetch('<?= site_url('todo/update_profile') ?>', {
                     method: 'POST',
                     body: formData,
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        profilePic.src = `<?= base_url('asset/images/profiles/') ?>${data.file_name}?t=${new Date().getTime()}`;
-                        showToast('Foto profil berhasil diperbarui!', 'success');
-                        // Update the profile picture in the session (this needs to be handled by the backend)
+                        showToast('Informasi profil berhasil diperbarui!', 'success');
+                        document.getElementById('profileUsername').textContent = newUsername;
+                        document.getElementById('profileEmail').textContent = newEmail;
                     } else {
-                        showToast(`Gagal mengunggah foto: ${data.error}`, 'danger');
+                        let errorMessage = data.error.replace(/<p>|<\/p>/g, '');
+                        showToast(`Gagal memperbarui profil: ${errorMessage}`, 'danger');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     showToast('Terjadi kesalahan jaringan.', 'danger');
                 });
-            }
-        });
-
-        // Save profile data handler
-        saveProfileButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const newUsername = usernameInput.value;
-            const newEmail = emailInput.value;
-
-            // Validasi sederhana di sisi klien
-            if (!newUsername.trim() || !newEmail.trim()) {
-                showToast('Username dan Email tidak boleh kosong.', 'danger');
-                return;
-            }
-
-            // Gunakan FormData untuk mengirim data ke server
-            const formData = new FormData();
-            formData.append('username', newUsername);
-            formData.append('email', newEmail);
-
-            fetch('<?= site_url('todo/update_profile') ?>', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Informasi profil berhasil diperbarui!', 'success');
-                    // Perbarui tampilan di halaman secara instan
-                    document.getElementById('profileUsername').textContent = newUsername;
-                    document.getElementById('profileEmail').textContent = newEmail;
-                } else {
-                    // Jika ada error dari server (misal: username sudah ada)
-                    // Ambil pesan error dari data.error
-                    let errorMessage = data.error.replace(/<p>|<\/p>/g, '');
-                    showToast(`Gagal memperbarui profil: ${errorMessage}`, 'danger');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast('Terjadi kesalahan jaringan.', 'danger');
             });
-        });
+        }
     }
 
     // --- Initial Setup on DOMContentLoaded ---
@@ -3076,7 +3128,6 @@ switch ($current_section) {
             }
         }
         
-        // Apply saved background on load
         const savedBgType = localStorage.getItem('background-type');
         const savedBgValue = localStorage.getItem('background-value');
         const isDarkModeOnLoad = document.body.classList.contains('dark-mode');
@@ -3137,11 +3188,15 @@ switch ($current_section) {
             createDailyTaskChart(currentDailyChartView);
             if (currentStatsView === 'card') {
                 document.getElementById('cardStatsContainer').classList.remove('d-none');
+                document.getElementById('cardStatsContainer').classList.add('d-block');
+                document.getElementById('chartStatsContainer').classList.remove('d-block');
                 document.getElementById('chartStatsContainer').classList.add('d-none');
                 if (doughnutChartInstance) doughnutChartInstance.destroy();
             } else if (currentStatsView === 'chart') {
+                document.getElementById('cardStatsContainer').classList.remove('d-block');
                 document.getElementById('cardStatsContainer').classList.add('d-none');
                 document.getElementById('chartStatsContainer').classList.remove('d-none');
+                document.getElementById('chartStatsContainer').classList.add('d-block');
                 createDoughnutChart();
             }
 
