@@ -44,7 +44,16 @@
             background-size: cover;
             color: var(--text-light);
         }
-
+        .background-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM30 0L0 30L30 60L60 30L30 0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
         .register-container {
             max-width: 530px;
             width: 100%;
@@ -279,6 +288,7 @@
     </style>
 </head>
 <body>
+<div class="background-animated"></div>
     <div class="register-container">
         <div class="register-header">
             <h2>List'in</h2>
