@@ -18,22 +18,22 @@ Website To-Do List sederhana yang dikembangkan dari nol selama internship di **P
 - Tugas mendekat atau lewat deadline
 - Grafik tugas mingguan selama 7 hari
 - Arsip tugas: semua tugas yang telah terhapus di Daftar Tugas
+- Pengaturan untuk mengkelola tampilan website
 
 ## 🛠️ Teknologi yang Digunakan
-- HTML, CSS, JavaScript
+- HTML, CSS, JavaScript, PHP
 - PHP 8.x
 - CodeIgniter 3
 - Bootstrap 5
 
 ## 📸 Cuplikan Tampilan (Screenshots)
-*(Tambahkan gambar tampilan web di sini jika ada)*  
 Contoh:
 ![screenshot](screenshots/todolist-dashboard.png)
 
 ## 🧑‍💻 Kontributor
 **Dadan Hamdani**  
 Frontend Web Developer Intern  
-[LinkedIn](https://www.linkedin.com/in/dhamda06/) | [GitHub](https://github.com/Dhamda06)
+[LinkedIn](https://www.linkedin.com/in/dadanhamdani02/) | [GitHub](https://github.com/Dhamda06)
 
 ## 📅 Periode Pengembangan
 Juli – Agustus 2025
@@ -48,5 +48,5 @@ Juli – Agustus 2025
    http://localhost/todolist
 
 ## 📌 Catatan
-- Project ini adalah bagian dari kegiatan magang dan ditujukan sebagai latihan membangun aplikasi CRUD sederhana.
+- Project ini adalah bagian dari kegiatan magang dan ditujukan sebagai latihan membangun aplikasi CRUD.
 - Silakan gunakan dan modifikasi sesuai kebutuhan edukasi/pribadi.
