@@ -325,7 +325,7 @@
                 <label for="password" class="form-label">Password</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan password Anda" required>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan Password Anda" required>
                     <span class="input-group-text toggle-password" id="togglePassword">
                         <i class="bi bi-eye-slash"></i>
                     </span>

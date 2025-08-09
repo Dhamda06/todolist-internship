@@ -107,7 +107,7 @@ class Todo extends CI_Controller {
                 'logged_in' => TRUE
             );
             $this->session->set_userdata($user_data);
-            $this->session->set_flashdata('message', 'Login berhasil! Selamat datang, ' . $user->username . '!');
+            $this->session->set_flashdata('message', 'Login berhasil! Selamat Datang, ' . $user->username . '!');
             $this->session->set_flashdata('type', 'success');
             redirect('todo');
         } else {

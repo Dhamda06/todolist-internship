@@ -208,7 +208,7 @@
             background-image: var(--gradient-main);
             border: none;
             color: white;
-            padding: 0.6rem 2rem;
+            padding: 1rem 2rem;
             box-shadow: 0 4px 10px rgba(107, 142, 35, 0.3);
         }
 
@@ -219,7 +219,7 @@
         
         .btn-login {
             background-color: transparent;
-            padding: calc(0.6rem - 2px) calc(2rem - 2px);
+            padding: 1rem 2rem;
             border: 2px solid var(--primary-olive);
             color: var(--primary-olive);
             transition: all 0.3s ease;
@@ -229,7 +229,7 @@
             background-image: var(--gradient-main);
             border: none;
             color: white;
-            padding: 0.6rem 2rem;
+            padding: 1rem 2rem;
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(107, 142, 35, 0.4);
         }
@@ -250,7 +250,7 @@
         }
 
         /* ====================================================================== */
-        /* Kartu Fitur (Full-width) */
+        /* Kartu Fitur (Dengan Scroll Horizontal dan Tombol Panah) */
         /* ====================================================================== */
         .features-section {
             padding: 4rem 2rem;
@@ -263,6 +263,96 @@
             background-color: rgba(46, 58, 71, 0.4);
         }
 
+        .features-container-wrapper {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features-scroll-container {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 1rem;
+            scroll-behavior: smooth;
+        }
+        
+        .features-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .feature-card-wrapper {
+            flex-shrink: 0;
+            width: 100%;
+            scroll-snap-align: start;
+        }
+
+        @media (min-width: 768px) {
+            .feature-card-wrapper {
+                width: calc(100% / 2 - 0.75rem);
+            }
+        }
+
+        @media (min-width: 992px) {
+            .feature-card-wrapper {
+                width: calc(100% / 3 - 1rem);
+            }
+        }
+
+        /* Gaya tombol panah */
+        .scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.9); /* Dibuat lebih solid */
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s;
+            color: var(--primary-olive);
+        }
+        
+        .scroll-arrow:hover {
+            background-color: rgba(107, 142, 35, 0.9); /* Efek hover: warna olive */
+            color: white; /* Efek hover: warna teks putih */
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .dark-mode .scroll-arrow {
+            background-color: rgba(46, 58, 71, 0.9);
+            color: #a7d129;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark-mode .scroll-arrow:hover {
+            background-color: #a7d129;
+            color: var(--text-dark);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        #scroll-left {
+            left: -20px;
+        }
+        
+        #scroll-right {
+            right: -20px;
+        }
+        
+        /* Sembunyikan tombol di mobile */
+        @media (max-width: 991px) {
+            .scroll-arrow {
+                display: none;
+            }
+        }
+        
         .feature-card {
             background-color: var(--card-light);
             border-radius: 1.2rem;
@@ -374,12 +464,10 @@
         .social-icons a:hover {
             transform: scale(1.1);
         }
-        
     </style>
 </head>
 <body>
     <div class="background-animated"></div>
-
     <header>
         <nav class="navbar navbar-expand-lg">
             <div class="container">
@@ -415,8 +503,8 @@
     <main class="hero-section">
         <div class="container">
             <h1 class="main-title">List'in</h1>
-            <h2>Kelola Tugas. Jadi Lebih Produktif</h2>
-            <p class="lead">Aplikasi manajemen tugas yang sederhana namun kuat untuk membantu Anda tetap teratur dan fokus pada hal yang paling penting.</p>
+            <h2>Bekerja Lebih Teratur, Capai Lebih Banyak</h2>
+            <p class="lead">Kelola tugas harian Anda dengan aplikasi manajemen yang dirancang untuk meningkatkan produktivitas dan menjaga fokus Anda pada prioritas utama.</p>
             <div class="d-flex justify-content-center gap-4 flex-wrap">
                 <a href="<?= site_url('todo/register') ?>" class="btn btn-register btn-action">
                     <i class="bi bi-person-add me-2"></i>Daftar Sekarang
@@ -430,28 +518,49 @@
 
     <section class="features-section">
         <div class="container">
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <i class="bi bi-list-check"></i>
-                        <h3 class="mt-3">Organisasi Mudah</h3>
-                        <p>Atur daftar tugas dengan prioritas dan deadline yang jelas.</p>
+            <div class="text-center mb-4">
+                <h2>Fitur Unggulan</h2>
+            </div>
+            <div class="features-container-wrapper">
+                <button id="scroll-left" class="scroll-arrow"><i class="bi bi-chevron-left"></i></button>
+                <div class="features-scroll-container" id="features-scroll-container">
+                    <div class="feature-card-wrapper">
+                        <div class="feature-card">
+                            <i class="bi bi-list-check"></i>
+                            <h3 class="mt-3">Organisasi Mudah</h3>
+                            <p>Atur daftar tugas dengan prioritas dan deadline yang jelas.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card-wrapper">
+                        <div class="feature-card">
+                            <i class="bi bi-graph-up"></i>
+                            <h3 class="mt-3">Analisis Statistik</h3>
+                            <p>Dapatkan wawasan berharga tentang kebiasaan dan kemajuan Anda.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card-wrapper">
+                        <div class="feature-card">
+                            <i class="bi bi-lightning-charge"></i>
+                            <h3 class="mt-3">Tingkatkan Fokus</h3>
+                            <p>Selesaikan lebih banyak hal dengan antarmuka yang bersih dan bebas gangguan.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card-wrapper">
+                        <div class="feature-card">
+                            <i class="bi bi-bell"></i>
+                            <h3 class="mt-3">Pengingat Cerdas</h3>
+                            <p>Dapatkan notifikasi dan pengingat yang disesuaikan agar tidak ada tugas yang terlewat.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card-wrapper">
+                        <div class="feature-card">
+                            <i class="bi bi-person-workspace"></i>
+                            <h3 class="mt-3">Kolaborasi Tim</h3>
+                            <p>Bagikan daftar tugas dan proyek dengan rekan tim untuk bekerja sama lebih efektif.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <i class="bi bi-graph-up"></i>
-                        <h3 class="mt-3">Analisis Statistik</h3>
-                        <p>Dapatkan wawasan berharga tentang kebiasaan dan kemajuan Anda.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <i class="bi bi-lightning-charge"></i>
-                        <h3 class="mt-3">Tingkatkan Fokus</h3>
-                        <p>Selesaikan lebih banyak hal dengan antarmuka yang bersih dan bebas gangguan.</p>
-                    </div>
-                </div>
+                <button id="scroll-right" class="scroll-arrow"><i class="bi bi-chevron-right"></i></button>
             </div>
         </div>
     </section>
@@ -504,7 +613,6 @@
             const toggleDesktop = document.getElementById('dark-mode-toggle-desktop');
             const navbar = document.querySelector('.navbar');
 
-            // Fungsi untuk memeriksa dan menerapkan dark mode
             const applyDarkMode = () => {
                 const isDarkMode = localStorage.getItem('dark-mode') === 'true';
                 if (isDarkMode) {
@@ -530,10 +638,8 @@
                 }
             };
             
-            // Terapkan dark mode saat halaman dimuat
             applyDarkMode();
 
-            // Toggle dark mode saat tombol diklik
             if (toggleMobile) {
                 toggleMobile.addEventListener('click', () => {
                     const isNowDarkMode = !body.classList.contains('dark-mode');
@@ -549,7 +655,6 @@
                 });
             }
 
-            // Efek scroll pada navbar
             const handleScroll = () => {
                 if (window.scrollY > 50) {
                     navbar.classList.add('scrolled');
@@ -557,8 +662,47 @@
                     navbar.classList.remove('scrolled');
                 }
             };
-            
             window.addEventListener('scroll', handleScroll);
+            
+            // --- Fungsionalitas Scroll Horizontal ---
+            const scrollContainer = document.getElementById('features-scroll-container');
+            const scrollLeftBtn = document.getElementById('scroll-left');
+            const scrollRightBtn = document.getElementById('scroll-right');
+            const scrollStep = 300; // Jarak scroll setiap kali tombol ditekan
+
+            const updateArrows = () => {
+                if (scrollContainer.scrollWidth > scrollContainer.clientWidth) {
+                    // Konten bisa di-scroll
+                    scrollLeftBtn.style.display = 'flex';
+                    scrollRightBtn.style.display = 'flex';
+
+                    // Atur opacity berdasarkan posisi scroll
+                    const isAtLeft = scrollContainer.scrollLeft === 0;
+                    const isAtRight = Math.round(scrollContainer.scrollLeft + scrollContainer.clientWidth) >= scrollContainer.scrollWidth;
+
+                    scrollLeftBtn.style.opacity = isAtLeft ? '0' : '1';
+                    scrollRightBtn.style.opacity = isAtRight ? '0' : '1';
+                    scrollLeftBtn.style.pointerEvents = isAtLeft ? 'none' : 'auto';
+                    scrollRightBtn.style.pointerEvents = isAtRight ? 'none' : 'auto';
+                } else {
+                    // Konten tidak bisa di-scroll
+                    scrollLeftBtn.style.display = 'none';
+                    scrollRightBtn.style.display = 'none';
+                }
+            };
+
+            scrollLeftBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+            });
+
+            scrollRightBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: scrollStep, behavior: 'smooth' });
+            });
+
+            scrollContainer.addEventListener('scroll', updateArrows);
+            window.addEventListener('resize', updateArrows);
+            
+            updateArrows(); // Panggil saat DOM selesai dimuat
         });
     </script>
 </body>

@@ -42,6 +42,9 @@ switch ($current_section) {
     case 'home':
         $page_title = 'Home';
         break;
+    case 'about':
+        $page_title = 'Tentang Kami';
+        break;
     case 'tasks':
         $page_title = 'Daftar Tugas';
         break;
@@ -51,7 +54,7 @@ switch ($current_section) {
     case 'archived':
         $page_title = 'Arsip Tugas';
         break;
-    case 'settings': // Tambahkan case baru untuk Settings
+    case 'settings':
         $page_title = 'Pengaturan';
         break;
 }
@@ -106,10 +109,10 @@ switch ($current_section) {
             --card-priority-low-text-light: #17a2b8;
             --card-priority-low-bg-dark: #0f687a;
             --card-priority-low-text-dark: #b3ecf6;
-            --color-solid-bg1: #495057;
-            --color-solid-bg2: #6B8E23;
-            --color-solid-bg3: #87CEEB;
-            --color-solid-bg4: #F4C2C2;
+            --color-solid-bg1: #495057; /* Dark Gray */
+            --color-solid-bg2: #6B8E23; /* Olive Drab */
+            --color-solid-bg3: #87CEEB; /* Sky Blue */
+            --color-solid-bg4: #F4C2C2; /* Powder Rose */
             /* New solid colors */
             --color-solid-bg5: #4B0082; /* Indigo */
             --color-solid-bg6: #800000; /* Maroon */
@@ -917,12 +920,6 @@ switch ($current_section) {
                 font-size: 0.8em;
                 padding: 0.4rem;
             }
-            .table td.task-details {
-                width: 100%;
-                display: block;
-                white-space: normal;
-                word-break: break-word;
-            }
             .table thead {
                 display: none;
             }
@@ -1262,7 +1259,7 @@ switch ($current_section) {
         /* --- New/Improved Card View Styles --- */
         .task-card-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             padding: 0;
         }
@@ -1376,7 +1373,81 @@ switch ($current_section) {
             background-color: rgba(220, 53, 69, 0.1);
         }
         .task-card-actions-dropdown .dropdown-item.text-info:hover {
-             background-color: rgba(23, 162, 184, 0.1);
+            background-color: rgba(23, 162, 184, 0.1);
+        }
+        /* Style baru untuk halaman About Us */
+        .about-us-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .about-us-section h2, .about-us-section h3 {
+            font-weight: 700;
+        }
+        .about-us-section h2 {
+            font-size: 2rem;
+            color: var(--primary-olive);
+            border-bottom: 2px solid var(--primary-olive);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .dark-mode .about-us-section h2 {
+            color: #A7D129;
+            border-bottom-color: #A7D129;
+        }
+        .about-us-section p {
+            line-height: 1.6;
+        }
+        .feature-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            height: 100%;
+            background-color: var(--light-gray-card);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .dark-mode .feature-card {
+            background-color: #2a2a2a;
+            border-color: var(--border-dark-mode);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        .dark-mode .feature-card:hover {
+            box-shadow: 0 8px 15px var(--shadow-dark-mode);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-olive);
+        }
+        .dark-mode .feature-icon {
+            color: #A7D129;
+        }
+        .feature-card h5 {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #6c757d;
+        }
+        .dark-mode .feature-card p {
+            color: #adb5bd;
+        }
+        .about-us-card {
+            padding: 2.5rem;
+        }
+        @media (max-width: 767.98px) {
+            .about-us-section h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -1385,17 +1456,17 @@ switch ($current_section) {
 <div class="toast-container" id="toastContainer"></div>
 
 <div class="modal fade" id="profilePicModal" tabindex="-1" aria-labelledby="profilePicModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="profilePicModalLabel">Foto Profil</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center">
-        <img src="<?= $profile_pic_url ?>" alt="Foto Profil" class="img-fluid rounded-circle" style="max-width: 100%; height: auto;">
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profilePicModalLabel">Foto Profil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="<?= $profile_pic_url ?>" alt="Foto Profil" class="img-fluid rounded-circle" style="max-width: 100%; height: auto;">
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
@@ -1501,6 +1572,9 @@ switch ($current_section) {
                 case 'home':
                     echo '🏠 Home';
                     break;
+                case 'about':
+                    echo 'ℹ️ Tentang Kami';
+                    break;
                 case 'tasks':
                     echo '📝 Daftar Tugas';
                     break;
@@ -1518,6 +1592,7 @@ switch ($current_section) {
         </h1>
         <nav class="main-nav">
             <a class="nav-link <?= ($current_section == 'home') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=home">Home</a>
+            <a class="nav-link <?= ($current_section == 'about') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=about">Tentang Kami</a>
             <a class="nav-link <?= ($current_section == 'tasks') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=tasks">Daftar Tugas</a>
             <a class="nav-link <?= ($current_section == 'statistics') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=statistics">Statistik Tugas</a>
             <a class="nav-link <?= ($current_section == 'archived') ? 'active' : '' ?>" href="<?= site_url('todo/index') ?>?section=archived">Arsip Tugas</a>
@@ -1568,7 +1643,7 @@ switch ($current_section) {
                     <i class="bi bi-emoji-sunglasses me-2"></i> Tidak ada tugas mendekat deadline. Luar biasa!
                 </div>
             <?php else: ?>
-                <div class="row row-cols-1 row-cols-md-2 g-3" id="todosHomeContainer">
+                <div class="row row-cols-1 row-cols-md-3 g-3" id="todosHomeContainer">
                     <?php foreach ($todos_home as $todo): ?>
                         <?php
                             $deadline_class = '';
@@ -1980,7 +2055,7 @@ switch ($current_section) {
                         onclick="toggleStatsView('chart')">Tampilan Diagram Lingkaran</button>
             </div>
             
-            <div id="cardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center <?= ($current_stats_view == 'card') ? 'd-none' : '' ?>">
+            <div id="cardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center <?= ($current_stats_view == 'card') ? '' : 'd-none' ?>">
                 <div class="col">
                     <div class="p-3 rounded-3 stats-card belum">
                         <i class="bi bi-hourglass-split stats-icon"></i>
@@ -2004,7 +2079,7 @@ switch ($current_section) {
                 </div>
             </div>
 
-            <div id="chartStatsContainer" class="mb-4 <?= ($current_stats_view == 'card') ? 'd-none' : '' ?>">
+            <div id="chartStatsContainer" class="mb-4 <?= ($current_stats_view == 'chart') ? '' : 'd-none' ?>">
                 <div id="doughnutChartWrapper">
                     <canvas id="taskStatusChart"></canvas>
                 </div>
@@ -2154,7 +2229,7 @@ switch ($current_section) {
                                 </a>
                             </div>
                         </div>
-                        </div>
+                    </div>
 
                     <div class="col-lg-6 mb-4">
                         <div class="card settings-card">
@@ -2179,31 +2254,31 @@ switch ($current_section) {
                                 
                                 <h6 class="text-muted fw-bold mt-3"><i class="bi bi-images me-2"></i>Pilih Gambar</h6>
                                 <div class="row g-2 mb-3">
-    <div class="col-3">
-        <div class="bg-option" data-bg="none"></div>
-    </div>
-    <div class="col-3">
-        <div class="bg-option" data-bg="default" style="background-image: url('<?= base_url('asset/images/cov.jpg'); ?>');"></div>
-    </div>
-    <div class="col-3">
-        <div class="bg-option" data-bg="bg1" style="background-image: url('<?= base_url('asset/images/bg1.jpg'); ?>');"></div>
-    </div>
-    <div class="col-3">
-        <div class="bg-option" data-bg="bg2" style="background-image: url('<?= base_url('asset/images/bg2.jpg'); ?>');"></div>
-    </div>
-    <div class="col-3">
-        <div class="bg-option" data-bg="bg3" style="background-image: var(--bg-image-3);"></div>
-    </div>
-    <div class="col-3">
-        <div class="bg-option" data-bg="bg4" style="background-image: var(--bg-image-4);"></div>
-    </div>
-    <div class="col-3">
-        <div class="bg-option" data-bg="bg5" style="background-image: var(--bg-image-5);"></div>
-    </div>
-    <div class="col-3">
-        <div class="bg-option" data-bg="bg6" style="background-image: var(--bg-image-6);"></div>
-    </div>
-</div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="none"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="default" style="background-image: url('<?= base_url('asset/images/cov.jpg'); ?>');"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="bg1" style="background-image: url('<?= base_url('asset/images/bg1.jpg'); ?>');"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="bg2" style="background-image: url('<?= base_url('asset/images/bg2.jpg'); ?>');"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="bg3" style="background-image: var(--bg-image-3);"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="bg4" style="background-image: var(--bg-image-4);"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="bg5" style="background-image: var(--bg-image-5);"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="bg-option" data-bg="bg6" style="background-image: var(--bg-image-6);"></div>
+                                    </div>
+                                </div>
                                 
                                 <h6 class="text-muted fw-bold"><i class="bi bi-palette-fill me-2"></i>Pilih Warna Solid</h6>
                                 <div class="row g-2">
@@ -2239,7 +2314,61 @@ switch ($current_section) {
                 
             </div>
         <?php endif; ?>
-    </div>
+
+        <?php if ($current_section == 'about'): ?>
+            <div class="about-us-section">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card about-us-card h-100 shadow-sm animate-on-scroll">
+                            <h2><i class="bi bi-info-circle me-2"></i>Tentang List'in</h2>
+                            <p class="lead">
+                            List'in adalah asisten digital untuk membantu mengatur tugas, meningkatkan produktivitas, dan mencapai tujuan dengan lebih efisien. Kami percaya manajemen tugas seharusnya menjadi proses yang mudah dan menyenangkan.
+                            </p>
+                            <p class="lead">
+                            Platform ini dirancang untuk memberikan kontrol penuh atas daftar tugas harian, mulai dari yang sederhana hingga yang paling kompleks. Dengan fokus pada antarmuka yang bersih dan fitur yang intuitif, List'in menjadi solusi ideal bagi siapa pun yang ingin tetap teratur dan fokus.
+                            </p>
+                            <a href="<?= site_url('todo/index') ?>?section=tasks" class="btn btn-olive btn-lg mt-4 w-100 shadow-sm animate-button">
+                                <i class="bi bi-plus-circle me-2"></i>Mulai Tambah Tugas Pertama Anda!
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <div class="card about-us-card h-100 shadow-sm animate-on-scroll">
+                            <h2><i class="bi bi-stars me-2"></i>Fitur Unggulan</h2>
+                            <p class="lead">
+                                Temukan fitur-fitur yang membuat List'in menjadi pilihan tepat untuk produktivitas Anda.
+                            </p>
+                            
+                            <div class="row row-cols-1 row-cols-md-3 g-3 text-center">
+                                <div class="col">
+                                    <div class="feature-card">
+                                        <i class="bi bi-check-lg feature-icon"></i>
+                                        <h5>Manajemen Tugas Intuitif</h5>
+                                        <p class="mb-0">Atur tugas Anda dengan mudah, tambahkan deskripsi, dan tandai prioritas. Semua dalam satu tempat yang rapi.</p>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="feature-card">
+                                        <i class="bi bi-speedometer2 feature-icon"></i>
+                                        <h5>Statistik Produktivitas</h5>
+                                        <p class="mb-0">Pantau kemajuan Anda dengan grafik dan ringkasan tugas yang komprehensif untuk tetap termotivasi.</p>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="feature-card">
+                                        <i class="bi bi-palette-fill feature-icon"></i>
+                                        <h5>Kustomisasi Tampilan</h5>
+                                        <p class="mb-0">Personalisasi tampilan aplikasi Anda dengan mode terang/gelap dan berbagai pilihan latar belakang.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+        </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

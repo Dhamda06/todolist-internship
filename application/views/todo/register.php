@@ -325,14 +325,14 @@
                 <label for="email" class="form-label">Email</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                    <input type="email" name="email" id="email" class="form-control" placeholder="Masukkan alamat email Anda" required>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Masukkan Email Anda" required>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Buat password (minimal 6 karakter)" required minlength="6">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Buat Password (minimal 6 karakter)" required minlength="6">
                     <span class="input-group-text toggle-password" id="togglePassword">
                         <i class="bi bi-eye-slash"></i>
                     </span>
@@ -342,7 +342,7 @@
                 <label for="passconf" class="form-label">Konfirmasi Password</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                    <input type="password" name="passconf" id="passconf" class="form-control" placeholder="Ketik ulang password Anda" required>
+                    <input type="password" name="passconf" id="passconf" class="form-control" placeholder="Ketik Ulang Password Anda" required>
                     <span class="input-group-text toggle-password" id="togglePassconf">
                         <i class="bi bi-eye-slash"></i>
                     </span>
