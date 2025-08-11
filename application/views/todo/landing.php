@@ -60,11 +60,11 @@
             height: 100%;
             pointer-events: none;
             z-index: -1;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM30 0L0 30L30 60L60 30L30 0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM30 0L0 30L30 60L60 30L30 0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
         .dark-mode .background-animated {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236B8E23' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM30 0L0 30L30 60L60 30L30 0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236B8E23' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM30 0L0 30L30 60L60 30L30 0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         
         /* ====================================================================== */
@@ -141,7 +141,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 8rem 2rem 4rem;
+            /* Padding atas dan bawah diperbaiki */
+            padding: 5rem 2rem 2rem; 
             text-align: center;
             animation: fadeIn 1s ease-out;
             background-color: var(--body-bg-light);
@@ -179,13 +180,15 @@
         h2 {
             font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 2rem;
+            /* Margin diperbaiki */
+            margin-bottom: 1rem; 
         }
         
         p.lead {
             font-size: 1.25rem;
             color: #6c757d;
-            margin-bottom: 2.5rem;
+            /* Margin diperbaiki */
+            margin-bottom: 1.5rem; 
             transition: color 0.4s ease-in-out;
         }
 
@@ -253,15 +256,16 @@
         /* Kartu Fitur (Dengan Scroll Horizontal dan Tombol Panah) */
         /* ====================================================================== */
         .features-section {
-            padding: 4rem 2rem;
-            background-color: rgba(255, 255, 255, 0.4);
-            transition: background-color 0.4s ease-in-out;
-            backdrop-filter: blur(8px);
-        }
+padding: 2rem 2rem;
+background-color: rgba(255, 255, 255, 0.4);
+transition: background-color 0.4s ease-in-out;
+backdrop-filter: blur(2px); /* Added subtle blur */
+}
 
-        .dark-mode .features-section {
-            background-color: rgba(46, 58, 71, 0.4);
-        }
+.dark-mode .features-section {
+background-color: rgba(46, 58, 71, 0.4);
+backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
+}
 
         .features-container-wrapper {
             position: relative;
@@ -305,7 +309,7 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background-color: rgba(255, 255, 255, 0.9); /* Dibuat lebih solid */
+            background-color: rgba(255, 255, 255, 0.9);
             border: none;
             border-radius: 50%;
             width: 40px;
@@ -321,8 +325,8 @@
         }
         
         .scroll-arrow:hover {
-            background-color: rgba(107, 142, 35, 0.9); /* Efek hover: warna olive */
-            color: white; /* Efek hover: warna teks putih */
+            background-color: rgba(107, 142, 35, 0.9);
+            color: white;
             transform: translateY(-50%) scale(1.1);
         }
 
@@ -504,7 +508,7 @@
         <div class="container">
             <h1 class="main-title">List'in</h1>
             <h2>Bekerja Lebih Teratur, Capai Lebih Banyak</h2>
-            <p class="lead">Kelola tugas harian Anda dengan aplikasi manajemen yang dirancang untuk meningkatkan produktivitas dan menjaga fokus Anda pada prioritas utama.</p>
+            <p class="lead">Kelola tugas harian dengan aplikasi manajemen yang dirancang untuk meningkatkan produktivitas dan menjaga fokus pada prioritas utama</p>
             <div class="d-flex justify-content-center gap-4 flex-wrap">
                 <a href="<?= site_url('todo/register') ?>" class="btn btn-register btn-action">
                     <i class="bi bi-person-add me-2"></i>Daftar Sekarang
@@ -570,7 +574,7 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h5>Tentang List'in</h5>
-                    <p>Aplikasi manajemen tugas yang membantu Anda mengorganisir pekerjaan, melacak kemajuan, dan meningkatkan produktivitas setiap hari.</p>
+                    <p>Aplikasi manajemen tugas yang membantu mengorganisir pekerjaan, melacak kemajuan, dan meningkatkan produktivitas setiap hari</p>
                 </div>
                 <div class="col-md-2 mb-4">
                     <h5>Navigasi</h5>

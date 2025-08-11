@@ -2450,7 +2450,7 @@ switch ($current_section) {
 
         const toastEl = document.getElementById(toastId);
         const toast = new bootstrap.Toast(toastEl, {
-            delay: 1200
+            delay: 1400
         });
         toast.show();
 
