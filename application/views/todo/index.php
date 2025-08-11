@@ -23,7 +23,7 @@ $current_stats_view = $current_stats_view ?? 'card'; // Default ke 'card' for st
 $current_daily_chart_view = $current_daily_chart_view ?? 'status'; // Default to 'status' for daily chart
 $current_task_view = $current_task_view ?? 'table'; // Tampilan default untuk daftar tugas: 'table' atau 'card'
 $sort = $sort ?? ''; // Default value
-$user_data = $user_data ?? null; // Tambahkan data pengguna untuk halaman Settings
+$user_data = $user_data ?? null; // Tambahkan data pengguna untuk halaman settings
 
 // Ambil URL profile picture dari data user, jika ada. Jika tidak, gunakan default.
 $profile_pic_url = base_url('asset/images/profiles/' . ($user_data->profile_picture ?? 'default_profile.png'));
@@ -35,6 +35,9 @@ $all_archived_tasks_for_js = $all_archived_tasks_for_js ?? [];
 // Dapatkan pesan flashdata dari controller dengan sintaks CodeIgniter 3
 $flash_message = $this->session->flashdata('message') ?? '';
 $flash_type = $this->session->flashdata('type') ?? 'info';
+
+// Dapatkan pengaturan pengguna dari database
+$user_settings = $user_settings ?? (object)['theme' => 'light', 'background_type' => 'image', 'background_value' => 'default'];
 
 // Logika untuk menentukan judul halaman/section
 $page_title = 'To-Do List';
@@ -58,6 +61,9 @@ switch ($current_section) {
         $page_title = 'Pengaturan';
         break;
 }
+
+// Tentukan kelas tema dari database
+$theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
 
 ?>
 <!DOCTYPE html>
@@ -268,7 +274,7 @@ switch ($current_section) {
             border-bottom: 3px solid #dee2e6;
         }
         .table tbody tr {
-            border-bottom: 3px solid #dee2e6;
+            border-bottom: 3px solid #dee2e2;
         }
         .table tbody tr:last-child {
             border-bottom: none;
@@ -1073,71 +1079,74 @@ switch ($current_section) {
         }
         /* New Styles for Settings Page */
         .settings-page {
-            padding: 1.5rem 0;
-        }
-        .settings-card {
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            background-color: var(--bg-light);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            border-radius: 1.25rem;
-            transition: all 0.3s ease;
-        }
-        .dark-mode .settings-card {
-            background-color: var(--card-dark);
-            box-shadow: 0 4px 15px var(--shadow-dark-mode);
-        }
-        .settings-card h4 {
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--primary-olive);
-            border-bottom: 2px solid var(--primary-olive);
-            padding-bottom: 0.5rem;
-            display: inline-block;
-        }
-        .dark-mode .settings-card h4 {
-            color: #A7D129;
-            border-bottom-color: #A7D129;
-        }
-        .settings-card .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .settings-card .profile-section .profile-pic {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary-olive);
-            transition: all 0.3s ease;
-            cursor: pointer; /* Menambahkan kursor pointer */
-        }
-        .dark-mode .settings-card .profile-section .profile-pic {
-            border-color: #A7D129;
-        }
-        .settings-card .profile-section .profile-info {
-            flex-grow: 1;
-        }
-        .settings-card .profile-section .profile-info h5 {
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-        .settings-card .profile-section .profile-info p {
-            color: #6c757d;
-            font-size: 0.9rem;
-            margin-bottom: 0;
-        }
-        .dark-mode .settings-card .profile-section .profile-info p {
-            color: #adb5bd;
-        }
-        .settings-card .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .settings-card .form-label {
-            font-weight: 600;
-        }
+    padding: 1.5rem 0;
+}
+.settings-card {
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    background-color: var(--bg-light);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border-radius: 1.25rem;
+    transition: all 0.3s ease;
+}
+.dark-mode .settings-card {
+    background-color: var(--card-dark);
+    box-shadow: 0 4px 15px var(--shadow-dark-mode);
+}
+.settings-card h4 {
+    font-weight: 700;
+    font-size: 1.25rem; /* Mengubah ukuran font dari 2.5rem menjadi 1.25rem */
+    margin-bottom: 1.5rem;
+    color: var(--primary-olive);
+    border-bottom: 2px solid var(--primary-olive);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+.dark-mode .settings-card h4 {
+    color: #A7D129;
+    border-bottom-color: #A7D129;
+}
+.settings-card .profile-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.settings-card .profile-section .profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-olive);
+    transition: all 0.3s ease;
+    cursor: pointer; /* Menambahkan kursor pointer */
+}
+.dark-mode .settings-card .profile-section .profile-pic {
+    border-color: #A7D129;
+}
+.settings-card .profile-section .profile-info {
+    flex-grow: 1;
+}
+.settings-card .profile-section .profile-info h5 {
+    font-weight: 600;
+    font-size: 1.1rem; /* Mengubah ukuran font dari 1.25rem menjadi 1.1rem */
+    margin-bottom: 0.2rem;
+}
+.settings-card .profile-section .profile-info p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+.dark-mode .settings-card .profile-section .profile-info p {
+    color: #adb5bd;
+}
+.settings-card .form-group {
+    margin-bottom: 1.5rem;
+}
+.settings-card .form-label {
+    font-weight: 600;
+    font-size: 0.95rem; /* Mengubah ukuran font label form */
+}
         .settings-card .bg-option {
             height: 80px;
             border-radius: 0.75rem;
@@ -1376,16 +1385,15 @@ switch ($current_section) {
             background-color: rgba(23, 162, 184, 0.1);
         }
         /* Style baru untuk halaman About Us */
-        .about-us-section {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
+        .about-us-section p.lead {
+    font-size: 1.15rem; /* Ukuran font standar */
+    line-height: 1.5;
+}
         .about-us-section h2, .about-us-section h3 {
             font-weight: 700;
         }
         .about-us-section h2 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: var(--primary-olive);
             border-bottom: 2px solid var(--primary-olive);
             padding-bottom: 0.5rem;
@@ -1431,11 +1439,11 @@ switch ($current_section) {
         }
         .feature-card h5 {
             font-weight: 600;
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             margin-bottom: 0.75rem;
         }
         .feature-card p {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #6c757d;
         }
         .dark-mode .feature-card p {
@@ -1451,7 +1459,7 @@ switch ($current_section) {
         }
     </style>
 </head>
-<body>
+<body class="<?= $theme_class ?>">
 
 <div class="toast-container" id="toastContainer"></div>
 
@@ -2216,18 +2224,18 @@ switch ($current_section) {
                                 <label for="emailInput" class="form-label">Email</label>
                                 <input type="email" id="emailInput" class="form-control" value="<?= htmlspecialchars($user_data->email ?? '') ?>">
                             </div>
-                            <div class="d-grid">
-                                <button class="btn btn-primary" id="saveProfileButton"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
-                            </div>
+                            <div class="text-center">
+    <button class="btn btn-primary btn-md" id="saveProfileButton"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
+</div>
                         </div>
 
                         <div class="card settings-card">
                             <h4><i class="bi bi-person-gear me-2"></i>Aksi Akun</h4>
-                            <div class="d-grid gap-3">
-                                <a href="<?= site_url('todo/logout') ?>" class="btn btn-danger btn-lg">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Keluar Akun
-                                </a>
-                            </div>
+                            <div class="text-center">
+    <a href="<?= site_url('todo/logout') ?>" class="btn btn-danger btn-lg">
+        <i class="bi bi-box-arrow-right me-2"></i>Keluar Akun
+    </a>
+</div>
                         </div>
                     </div>
 
@@ -2327,9 +2335,11 @@ switch ($current_section) {
                             <p class="lead">
                             Platform ini dirancang untuk memberikan kontrol penuh atas daftar tugas harian, mulai dari yang sederhana hingga yang paling kompleks. Dengan fokus pada antarmuka yang bersih dan fitur yang intuitif, List'in menjadi solusi ideal bagi siapa pun yang ingin tetap teratur dan fokus.
                             </p>
-                            <a href="<?= site_url('todo/index') ?>?section=tasks" class="btn btn-olive btn-lg mt-4 w-100 shadow-sm animate-button">
-                                <i class="bi bi-plus-circle me-2"></i>Mulai Tambah Tugas Pertama Anda!
-                            </a>
+                           <div class="d-flex justify-content-center">
+    <a href="<?= site_url('todo/index') ?>?section=tasks" class="btn btn-olive mt-4 shadow-sm animate-button">
+        <i class="bi bi-plus-circle me-2"></i>Mulai Tambah Tugas Pertama Anda!
+    </a>
+</div>
                         </div>
                     </div>
 
@@ -2391,6 +2401,13 @@ switch ($current_section) {
 
     let doughnutChartInstance;
     let dailyChartInstance;
+
+    // Tambahkan variabel PHP untuk pengaturan awal
+    const initialSettings = {
+        theme: '<?= $user_settings->theme ?? 'light' ?>',
+        background_type: '<?= $user_settings->background_type ?? 'image' ?>',
+        background_value: '<?= $user_settings->background_value ?? 'default' ?>'
+    };
 
     /**
      * Menampilkan notifikasi toast di tengah atas.
@@ -2465,32 +2482,101 @@ switch ($current_section) {
         const icon = document.querySelector('#modeToggle i');
         icon.classList.toggle("bi-moon-fill");
         icon.classList.toggle("bi-sun-fill");
+        
         const isDarkMode = document.body.classList.contains('dark-mode');
+        const newTheme = isDarkMode ? 'dark' : 'light';
+        updateServerSettings(newTheme, initialSettings.background_type, initialSettings.background_value);
+        
         if (isDarkMode) {
-            localStorage.setItem('dark-mode', 'true');
+            document.querySelector('.theme-toggle.dark').classList.add('active');
+            document.querySelector('.theme-toggle.light').classList.remove('active');
         } else {
-            localStorage.setItem('dark-mode', 'false');
+            document.querySelector('.theme-toggle.light').classList.add('active');
+            document.querySelector('.theme-toggle.dark').classList.remove('active');
         }
+
         if (doughnutChartInstance && document.getElementById('chartStatsContainer') && !document.getElementById('chartStatsContainer').classList.contains('d-none')) {
             updateDoughnutChartColors();
         }
         if (dailyChartInstance) {
             createDailyTaskChart(new URLSearchParams(window.location.search).get('daily_chart_view') || 'status');
         }
-        // Update settings UI
-        const lightThemeBtn = document.querySelector('.theme-toggle.light');
-        const darkThemeBtn = document.querySelector('.theme-toggle.dark');
-        if (isDarkMode) {
-            darkThemeBtn.classList.add('active');
-            lightThemeBtn.classList.remove('active');
-        } else {
-            lightThemeBtn.classList.add('active');
-            darkThemeBtn.classList.remove('active');
+    }
+    
+    /**
+     * Memperbarui pengaturan tampilan di server.
+     * @param {string} theme Mode tampilan ('light' atau 'dark').
+     * @param {string} bgType Jenis latar belakang ('image', 'color', atau 'none').
+     * @param {string} bgValue Nilai spesifik latar belakang.
+     */
+    function updateServerSettings(theme, bgType, bgValue) {
+        const formData = new FormData();
+        formData.append('theme', theme);
+        formData.append('background_type', bgType);
+        formData.append('background_value', bgValue);
+
+        fetch('<?= site_url('todo/update_settings') ?>', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Perbarui variabel JavaScript setelah sukses
+                initialSettings.theme = theme;
+                initialSettings.background_type = bgType;
+                initialSettings.background_value = bgValue;
+                showToast(data.message, 'success');
+            } else {
+                showToast(data.error, 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Terjadi kesalahan jaringan saat menyimpan pengaturan.', 'danger');
+        });
+    }
+
+    function applyBackground(type, value) {
+        let backgroundImage = '';
+        let backgroundColor = '';
+        let opacity = type === 'image' ? (document.body.classList.contains('dark-mode') ? '0.2' : '0.9') : '0';
+        
+        document.documentElement.style.removeProperty('--bg-image');
+        document.documentElement.style.removeProperty('--bg-color');
+        document.documentElement.style.removeProperty('--bg-color-dark');
+        document.documentElement.style.removeProperty('--bg-opacity');
+        document.documentElement.style.removeProperty('--bg-opacity-dark');
+
+        if (type === 'image') {
+            if (value === 'default') {
+                backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
+            } else if (value === 'bg1') {
+                backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
+            } else if (value === 'bg2') {
+                backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
+            } else if (value === 'bg3') {
+                backgroundImage = `var(--bg-image-3)`;
+            } else if (value === 'bg4') {
+                backgroundImage = `var(--bg-image-4)`;
+            } else if (value === 'bg5') {
+                backgroundImage = `var(--bg-image-5)`;
+            } else if (value === 'bg6') {
+                backgroundImage = `var(--bg-image-6)`;
+            }
+            document.documentElement.style.setProperty('--bg-image', backgroundImage);
+            document.documentElement.style.setProperty('--bg-opacity', opacity);
+            document.documentElement.style.setProperty('--bg-opacity-dark', opacity);
+        } else if (type === 'color') {
+            backgroundColor = `var(--color-${value})`;
+            document.documentElement.style.setProperty('--bg-color', backgroundColor);
+            document.documentElement.style.setProperty('--bg-color-dark', backgroundColor);
+            document.documentElement.style.setProperty('--bg-opacity', '1');
+            document.documentElement.style.setProperty('--bg-opacity-dark', '1');
+        } else if (value === 'none') {
+            document.documentElement.style.setProperty('--bg-opacity', '0');
+            document.documentElement.style.setProperty('--bg-opacity-dark', '0');
         }
-        // Re-apply background with new mode
-        const currentBgType = localStorage.getItem('background-type') || 'image';
-        const currentBgValue = localStorage.getItem('background-value') || 'default';
-        applyBackground(currentBgType, currentBgValue, isDarkMode);
     }
 
     // --- Data & Statistics Functions ---
@@ -2923,6 +3009,8 @@ switch ($current_section) {
 
         if (view === 'card') {
             cardContainer.classList.remove('d-none');
+            cardContainer.classList.add('d-block');
+            chartContainer.classList.remove('d-block');
             chartContainer.classList.add('d-none');
             toggleCardBtn.classList.add('btn-olive');
             toggleCardBtn.classList.remove('btn-outline-olive');
@@ -2930,8 +3018,10 @@ switch ($current_section) {
             toggleChartBtn.classList.add('btn-outline-olive');
             if (doughnutChartInstance) doughnutChartInstance.destroy();
         } else if (view === 'chart') {
+            cardContainer.classList.remove('d-block');
             cardContainer.classList.add('d-none');
             chartContainer.classList.remove('d-none');
+            chartContainer.classList.add('d-block');
             toggleCardBtn.classList.remove('btn-olive');
             toggleCardBtn.classList.add('btn-outline-olive');
             toggleChartBtn.classList.add('btn-olive');
@@ -3005,9 +3095,8 @@ switch ($current_section) {
         const usernameInput = document.getElementById('usernameInput');
         const emailInput = document.getElementById('emailInput');
 
-        // Set initial active state for theme buttons
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        if (isDarkMode) {
+        // Set initial active state for theme buttons based on database data
+        if (initialSettings.theme === 'dark') {
             darkThemeBtn.classList.add('active');
             lightThemeBtn.classList.remove('active');
         } else {
@@ -3015,96 +3104,53 @@ switch ($current_section) {
             darkThemeBtn.classList.remove('active');
         }
 
+        // Apply saved background on load based on database data
+        if (initialSettings.background_type && initialSettings.background_value) {
+            let activeElement;
+            if (initialSettings.background_type === 'image') {
+                activeElement = document.querySelector(`.bg-option[data-bg="${initialSettings.background_value}"]`);
+            } else if (initialSettings.background_type === 'color') {
+                activeElement = document.querySelector(`.bg-color-option[data-color="${initialSettings.background_value}"]`);
+            }
+            if (activeElement) {
+                document.querySelectorAll('.bg-option, .bg-color-option').forEach(btn => btn.classList.remove('active'));
+                activeElement.classList.add('active');
+            }
+            applyBackground(initialSettings.background_type, initialSettings.background_value);
+        }
+
         // Handle theme change buttons
         lightThemeBtn.addEventListener('click', () => {
             document.body.classList.remove('dark-mode');
-            localStorage.setItem('dark-mode', 'false');
             lightThemeBtn.classList.add('active');
             darkThemeBtn.classList.remove('active');
-            updateDoughnutChartColors();
-            updateDailyChartColors();
-            // Re-apply background with new mode
-            const currentBgType = localStorage.getItem('background-type') || 'image';
-            const currentBgValue = localStorage.getItem('background-value') || 'default';
-            applyBackground(currentBgType, currentBgValue, false);
+            updateServerSettings('light', initialSettings.background_type, initialSettings.background_value);
         });
 
         darkThemeBtn.addEventListener('click', () => {
             document.body.classList.add('dark-mode');
-            localStorage.setItem('dark-mode', 'true');
             darkThemeBtn.classList.add('active');
             lightThemeBtn.classList.remove('active');
-            updateDoughnutChartColors();
-            updateDailyChartColors();
-            // Re-apply background with new mode
-            const currentBgType = localStorage.getItem('background-type') || 'image';
-            const currentBgValue = localStorage.getItem('background-value') || 'default';
-            applyBackground(currentBgType, currentBgValue, true);
+            updateServerSettings('dark', initialSettings.background_type, initialSettings.background_value);
         });
         
-        function applyBackground(type, value, isDarkMode) {
-            let backgroundImage = '';
-            let backgroundColor = '';
-            let opacity = type === 'image' ? (isDarkMode ? '0.2' : '0.9') : '0';
-            
-            // Reset properties first
-            document.documentElement.style.removeProperty('--bg-image');
-            document.documentElement.style.removeProperty('--bg-color');
-            document.documentElement.style.removeProperty('--bg-color-dark');
-            document.documentElement.style.removeProperty('--bg-opacity');
-            document.documentElement.style.removeProperty('--bg-opacity-dark');
-
-            if (type === 'image') {
-                if (value === 'default') {
-                    backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
-                } else if (value === 'bg1') {
-                    backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
-                } else if (value === 'bg2') {
-                    backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
-                } else if (value === 'bg3') {
-                    backgroundImage = `var(--bg-image-3)`;
-                } else if (value === 'bg4') {
-                    backgroundImage = `var(--bg-image-4)`;
-                } else if (value === 'bg5') {
-                    backgroundImage = `var(--bg-image-5)`;
-                } else if (value === 'bg6') {
-                    backgroundImage = `var(--bg-image-6)`;
-                }
-                document.documentElement.style.setProperty('--bg-image', backgroundImage);
-                document.documentElement.style.setProperty('--bg-opacity', opacity);
-                document.documentElement.style.setProperty('--bg-opacity-dark', opacity);
-            } else if (type === 'color') {
-                backgroundColor = `var(--color-${value})`;
-                document.documentElement.style.setProperty('--bg-color', backgroundColor);
-                document.documentElement.style.setProperty('--bg-color-dark', backgroundColor);
-                document.documentElement.style.setProperty('--bg-opacity', '1');
-                document.documentElement.style.setProperty('--bg-opacity-dark', '1');
-            } else if (value === 'none') {
-                document.documentElement.style.setProperty('--bg-opacity', '0');
-                document.documentElement.style.setProperty('--bg-opacity-dark', '0');
-            }
-        }
-
         // Handle background image change
         bgOptions.forEach(option => {
             option.addEventListener('click', () => {
                 const bgValue = option.dataset.bg;
                 
-                // Reset active state for all options
                 document.querySelectorAll('.bg-option, .bg-color-option').forEach(btn => btn.classList.remove('active'));
                 
                 option.classList.add('active');
                 
-                let isDarkMode = document.body.classList.contains('dark-mode');
+                let currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
                 
                 if (bgValue === 'none') {
-                    applyBackground('none', 'none', isDarkMode);
-                    localStorage.setItem('background-type', 'none');
-                    localStorage.setItem('background-value', 'none');
+                    updateServerSettings(currentTheme, 'none', 'none');
+                    applyBackground('none', 'none');
                 } else {
-                    applyBackground('image', bgValue, isDarkMode);
-                    localStorage.setItem('background-type', 'image');
-                    localStorage.setItem('background-value', bgValue);
+                    updateServerSettings(currentTheme, 'image', bgValue);
+                    applyBackground('image', bgValue);
                 }
             });
         });
@@ -3114,66 +3160,16 @@ switch ($current_section) {
             option.addEventListener('click', () => {
                 const colorValue = option.dataset.color;
                 
-                // Reset active state for all options
                 document.querySelectorAll('.bg-option, .bg-color-option').forEach(btn => btn.classList.remove('active'));
                 
                 option.classList.add('active');
                 
-                let isDarkMode = document.body.classList.contains('dark-mode');
-                applyBackground('color', colorValue, isDarkMode);
-                localStorage.setItem('background-type', 'color');
-                localStorage.setItem('background-value', colorValue);
+                let currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+                updateServerSettings(currentTheme, 'color', colorValue);
+                applyBackground('color', colorValue);
             });
         });
         
-        // Apply saved background on load
-        const savedBgType = localStorage.getItem('background-type');
-        const savedBgValue = localStorage.getItem('background-value');
-        const isDarkModeOnLoad = document.body.classList.contains('dark-mode');
-        if (savedBgType && savedBgValue) {
-             let backgroundImage = '';
-             let backgroundColor = '';
-             if (savedBgType === 'image') {
-                 if (savedBgValue === 'default') {
-                     backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
-                 } else if (savedBgValue === 'bg1') {
-                     backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
-                 } else if (savedBgValue === 'bg2') {
-                     backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
-                 } else if (savedBgValue === 'bg3') {
-                     backgroundImage = `var(--bg-image-3)`;
-                 } else if (savedBgValue === 'bg4') {
-                     backgroundImage = `var(--bg-image-4)`;
-                 } else if (savedBgValue === 'bg5') {
-                     backgroundImage = `var(--bg-image-5)`;
-                 } else if (savedBgValue === 'bg6') {
-                     backgroundImage = `var(--bg-image-6)`;
-                 }
-                 document.documentElement.style.setProperty('--bg-image', backgroundImage);
-                 document.documentElement.style.setProperty('--bg-opacity', isDarkModeOnLoad ? '0.2' : '0.9');
-                 document.documentElement.style.setProperty('--bg-opacity-dark', isDarkModeOnLoad ? '0.2' : '0.9');
-             } else if (savedBgType === 'color') {
-                 backgroundColor = `var(--color-${savedBgValue})`;
-                 document.documentElement.style.setProperty('--bg-color', backgroundColor);
-                 document.documentElement.style.setProperty('--bg-color-dark', backgroundColor);
-                 document.documentElement.style.setProperty('--bg-opacity', '1');
-                 document.documentElement.style.setProperty('--bg-opacity-dark', '1');
-             } else if (savedBgType === 'none') {
-                 document.documentElement.style.setProperty('--bg-opacity', '0');
-                 document.documentElement.style.setProperty('--bg-opacity-dark', '0');
-             }
-             const activeElement = document.querySelector(`[data-${savedBgType === 'image' ? 'bg' : 'color'}="${savedBgValue}"]`);
-             if (activeElement) {
-                 activeElement.classList.add('active');
-             }
-        } else {
-            // Set default if no settings are saved
-            applyBackground('image', 'default', isDarkModeOnLoad);
-            const defaultBgOption = document.querySelector('.bg-option[data-bg="default"]');
-            if (defaultBgOption) defaultBgOption.classList.add('active');
-        }
-
-
         // Profile picture upload handler
         profilePicInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
@@ -3189,7 +3185,6 @@ switch ($current_section) {
                     if (data.success) {
                         profilePic.src = `<?= base_url('asset/images/profiles/') ?>${data.file_name}?t=${new Date().getTime()}`;
                         showToast('Foto profil berhasil diperbarui!', 'success');
-                        // Update the profile picture in the session (this needs to be handled by the backend)
                     } else {
                         showToast(`Gagal mengunggah foto: ${data.error}`, 'danger');
                     }
@@ -3214,7 +3209,6 @@ switch ($current_section) {
                 return;
             }
 
-            // Gunakan FormData untuk mengirim data ke server
             const formData = new FormData();
             formData.append('username', newUsername);
             formData.append('email', newEmail);
@@ -3227,12 +3221,9 @@ switch ($current_section) {
             .then(data => {
                 if (data.success) {
                     showToast('Informasi profil berhasil diperbarui!', 'success');
-                    // Perbarui tampilan di halaman secara instan
                     document.getElementById('profileUsername').textContent = newUsername;
                     document.getElementById('profileEmail').textContent = newEmail;
                 } else {
-                    // Jika ada error dari server (misal: username sudah ada)
-                    // Ambil pesan error dari data.error
                     let errorMessage = data.error.replace(/<p>|<\/p>/g, '');
                     showToast(`Gagal memperbarui profil: ${errorMessage}`, 'danger');
                 }
@@ -3246,8 +3237,8 @@ switch ($current_section) {
 
     // --- Initial Setup on DOMContentLoaded ---
     document.addEventListener('DOMContentLoaded', () => {
-        const savedMode = localStorage.getItem('dark-mode');
-        if (savedMode === 'true' || (savedMode === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        // Apply saved theme and background from database on load
+        if (initialSettings.theme === 'dark') {
             document.body.classList.add('dark-mode');
             const modeToggleIcon = document.querySelector('#modeToggle i');
             if (modeToggleIcon) {
@@ -3255,54 +3246,8 @@ switch ($current_section) {
                 modeToggleIcon.classList.add("bi-sun-fill");
             }
         }
+        applyBackground(initialSettings.background_type, initialSettings.background_value);
         
-        // Apply saved background on load
-        const savedBgType = localStorage.getItem('background-type');
-        const savedBgValue = localStorage.getItem('background-value');
-        const isDarkModeOnLoad = document.body.classList.contains('dark-mode');
-        if (savedBgType && savedBgValue) {
-             let backgroundImage = '';
-             let backgroundColor = '';
-             if (savedBgType === 'image') {
-                 if (savedBgValue === 'default') {
-                     backgroundImage = `url('<?= base_url('asset/images/cov.jpg'); ?>')`;
-                 } else if (savedBgValue === 'bg1') {
-                     backgroundImage = `url('<?= base_url('asset/images/bg1.jpg'); ?>')`;
-                 } else if (savedBgValue === 'bg2') {
-                     backgroundImage = `url('<?= base_url('asset/images/bg2.jpg'); ?>')`;
-                 } else if (savedBgValue === 'bg3') {
-                     backgroundImage = `var(--bg-image-3)`;
-                 } else if (savedBgValue === 'bg4') {
-                     backgroundImage = `var(--bg-image-4)`;
-                 } else if (savedBgValue === 'bg5') {
-                     backgroundImage = `var(--bg-image-5)`;
-                 } else if (savedBgValue === 'bg6') {
-                     backgroundImage = `var(--bg-image-6)`;
-                 }
-                 document.documentElement.style.setProperty('--bg-image', backgroundImage);
-                 document.documentElement.style.setProperty('--bg-opacity', isDarkModeOnLoad ? '0.2' : '0.9');
-                 document.documentElement.style.setProperty('--bg-opacity-dark', isDarkModeOnLoad ? '0.2' : '0.9');
-             } else if (savedBgType === 'color') {
-                 backgroundColor = `var(--color-${savedBgValue})`;
-                 document.documentElement.style.setProperty('--bg-color', backgroundColor);
-                 document.documentElement.style.setProperty('--bg-color-dark', backgroundColor);
-                 document.documentElement.style.setProperty('--bg-opacity', '1');
-                 document.documentElement.style.setProperty('--bg-opacity-dark', '1');
-             } else if (savedBgType === 'none') {
-                 document.documentElement.style.setProperty('--bg-opacity', '0');
-                 document.documentElement.style.setProperty('--bg-opacity-dark', '0');
-             }
-             const activeElement = document.querySelector(`[data-${savedBgType === 'image' ? 'bg' : 'color'}="${savedBgValue}"]`);
-             if (activeElement) {
-                 activeElement.classList.add('active');
-             }
-        } else {
-            // Set default if no settings are saved
-            applyBackground('image', 'default', isDarkModeOnLoad);
-            const defaultBgOption = document.querySelector('.bg-option[data-bg="default"]');
-            if (defaultBgOption) defaultBgOption.classList.add('active');
-        }
-
         const currentSection = '<?= $current_section ?>';
         const currentStatsView = '<?= $current_stats_view ?? "card" ?>';
         const currentDailyChartView = '<?= $current_daily_chart_view ?? "status" ?>';
