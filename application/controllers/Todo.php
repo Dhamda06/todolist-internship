@@ -85,7 +85,9 @@ class Todo extends CI_Controller {
         if ($this->session->userdata('logged_in')) {
             redirect('todo');
         }
-        $this->load->view('todo/landing');
+        $data['flash_message'] = $this->session->flashdata('message');
+        $data['flash_type'] = $this->session->flashdata('type');
+        $this->load->view('todo/landing', $data);
     }
 
     public function login() {
@@ -110,7 +112,7 @@ class Todo extends CI_Controller {
                 'logged_in' => TRUE
             );
             $this->session->set_userdata($user_data);
-            $this->session->set_flashdata('message', 'Login berhasil! Selamat Datang, ' . $user->username . '!');
+            $this->session->set_flashdata('message', 'Login berhasil! Selamat Datang, ' . $user->username);
             $this->session->set_flashdata('type', 'success');
             redirect('todo');
         } else {
@@ -249,13 +251,13 @@ class Todo extends CI_Controller {
             // Ambil data user saat ini untuk memeriksa foto lama
             $user = $this->User_model->get_user_by_id($userId);
             
-            // Hapus foto lama jika ada dan bukan foto default
-            if ($user && !empty($user->profile_picture) && $user->profile_picture !== 'default_profile.png') {
-                $old_file = FCPATH . $upload_path . $user->profile_picture;
-                if (file_exists($old_file)) {
-                    unlink($old_file);
-                }
-            }
+            // --- INI ADALAH BAGIAN YANG DINONAKTIFKAN ---
+            // if ($user && !empty($user->profile_picture) && $user->profile_picture !== 'default_profile.png') {
+            //     $old_file = FCPATH . $upload_path . $user->profile_picture;
+            //     if (file_exists($old_file)) {
+            //         unlink($old_file);
+            //     }
+            // }
 
             // Perbarui nama file baru di database
             $this->User_model->update_profile_picture($userId, $file_name);

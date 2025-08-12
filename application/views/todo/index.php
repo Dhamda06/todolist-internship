@@ -1035,118 +1035,176 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                 padding: 0.25rem 0.75rem;
             }
         }
-        /* Toast Notification Styling */
+        
+        /* Toast Notification Styling (Updated) */
         #toastContainer {
             position: fixed;
-            top: 1rem;
+            top: 1.5rem;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1090;
             width: 90%;
-            max-width: 400px;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
-        .toast-body {
+
+        .toast {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
             background-color: var(--bg-light);
             color: var(--text-dark);
+            /* animation: fadeInSlideUp 0.5s ease-out; */
+            border: 2px solid transparent;
         }
-        .dark-mode .toast-body {
+
+        .dark-mode .toast {
             background-color: var(--card-dark);
             color: var(--text-light);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
-        .toast-header.bg-success {
-            background-color: #28a745 !important;
+
+        /* @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px) translateX(-50%); }
+            to { opacity: 1; transform: translateY(0) translateX(-50%); }
+        } */
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
         }
-        .toast-header.bg-info {
-            background-color: #17a2b8 !important;
+
+        .dark-mode .toast-header {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
         }
-        .toast-header.bg-warning {
-            background-color: #ffc107 !important;
+
+        .toast-header .btn-close {
+            margin-right: -0.25rem;
+            filter: invert(1);
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
         }
-        .toast-header.bg-danger {
-            background-color: #dc3545 !important;
+
+        .toast-header .btn-close:hover {
+            opacity: 1;
         }
-        .dark-mode .toast-header.bg-success {
-            background-color: #198754 !important;
+
+        .dark-mode .toast-header .btn-close {
+            filter: invert(0);
         }
-        .dark-mode .toast-header.bg-info {
-            background-color: #0f687a !important;
+
+        .toast-header .me-auto {
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .dark-mode .toast-header.bg-warning {
-            background-color: #ffca2c !important;
+
+        .toast-body {
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: inherit;
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
         }
-        .dark-mode .toast-header.bg-danger {
-            background-color: #990000 !important;
-        }
+
+        /* Custom Toast Colors and Icons */
+        .toast.toast-success .toast-header { background-color: #28a745; color: white; }
+        .dark-mode .toast.toast-success .toast-header { background-color: #198754; }
+        .toast.toast-success .toast-body { border: 2px solid #28a745; border-top: none; }
+        .dark-mode .toast.toast-success .toast-body { border-color: #198754; }
+
+        .toast.toast-info .toast-header { background-color: #17a2b8; color: white; }
+        .dark-mode .toast.toast-info .toast-header { background-color: #0f687a; }
+        .toast.toast-info .toast-body { border: 2px solid #17a2b8; border-top: none; }
+        .dark-mode .toast.toast-info .toast-body { border-color: #0f687a; }
+
+        .toast.toast-warning .toast-header { background-color: #ffc107; color: #343a40; }
+        .dark-mode .toast.toast-warning .toast-header { background-color: #ffca2c; }
+        .toast.toast-warning .toast-body { border: 2px solid #ffc107; border-top: none; }
+        .dark-mode .toast.toast-warning .toast-body { border-color: #ffca2c; }
+
+        .toast.toast-danger .toast-header { background-color: #dc3545; color: white; }
+        .dark-mode .toast.toast-danger .toast-header { background-color: #990000; }
+        .toast.toast-danger .toast-body { border: 2px solid #dc3545; border-top: none; }
+        .dark-mode .toast.toast-danger .toast-body { border-color: #990000; }
         /* New Styles for Settings Page */
         .settings-page {
-    padding: 1.5rem 0;
-}
-.settings-card {
-    padding: 2.5rem;
-    margin-bottom: 2rem;
-    background-color: var(--bg-light);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    border-radius: 1.25rem;
-    transition: all 0.3s ease;
-}
-.dark-mode .settings-card {
-    background-color: var(--card-dark);
-    box-shadow: 0 4px 15px var(--shadow-dark-mode);
-}
-.settings-card h4 {
-    font-weight: 700;
-    font-size: 1.25rem; /* Mengubah ukuran font dari 2.5rem menjadi 1.25rem */
-    margin-bottom: 1.5rem;
-    color: var(--primary-olive);
-    border-bottom: 2px solid var(--primary-olive);
-    padding-bottom: 0.5rem;
-    display: inline-block;
-}
-.dark-mode .settings-card h4 {
-    color: #A7D129;
-    border-bottom-color: #A7D129;
-}
-.settings-card .profile-section {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-.settings-card .profile-section .profile-pic {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--primary-olive);
-    transition: all 0.3s ease;
-    cursor: pointer; /* Menambahkan kursor pointer */
-}
-.dark-mode .settings-card .profile-section .profile-pic {
-    border-color: #A7D129;
-}
-.settings-card .profile-section .profile-info {
-    flex-grow: 1;
-}
-.settings-card .profile-section .profile-info h5 {
-    font-weight: 600;
-    font-size: 1.1rem; /* Mengubah ukuran font dari 1.25rem menjadi 1.1rem */
-    margin-bottom: 0.2rem;
-}
-.settings-card .profile-section .profile-info p {
-    color: #6c757d;
-    font-size: 0.9rem;
-    margin-bottom: 0;
-}
-.dark-mode .settings-card .profile-section .profile-info p {
-    color: #adb5bd;
-}
-.settings-card .form-group {
-    margin-bottom: 1.5rem;
-}
-.settings-card .form-label {
-    font-weight: 600;
-    font-size: 0.95rem; /* Mengubah ukuran font label form */
-}
+            padding: 1.5rem 0;
+        }
+        .settings-card {
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            background-color: var(--bg-light);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: 1.25rem;
+            transition: all 0.3s ease;
+        }
+        .dark-mode .settings-card {
+            background-color: var(--card-dark);
+            box-shadow: 0 4px 15px var(--shadow-dark-mode);
+        }
+        .settings-card h4 {
+            font-weight: 700;
+            font-size: 1.25rem; /* Mengubah ukuran font dari 2.5rem menjadi 1.25rem */
+            margin-bottom: 1.5rem;
+            color: var(--primary-olive);
+            border-bottom: 2px solid var(--primary-olive);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        .dark-mode .settings-card h4 {
+            color: #A7D129;
+            border-bottom-color: #A7D129;
+        }
+        .settings-card .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .settings-card .profile-section .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-olive);
+            transition: all 0.3s ease;
+            cursor: pointer; /* Menambahkan kursor pointer */
+        }
+        .dark-mode .settings-card .profile-section .profile-pic {
+            border-color: #A7D129;
+        }
+        .settings-card .profile-section .profile-info {
+            flex-grow: 1;
+        }
+        .settings-card .profile-section .profile-info h5 {
+            font-weight: 600;
+            font-size: 1.1rem; /* Mengubah ukuran font dari 1.25rem menjadi 1.1rem */
+            margin-bottom: 0.2rem;
+        }
+        .settings-card .profile-section .profile-info p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+        .dark-mode .settings-card .profile-section .profile-info p {
+            color: #adb5bd;
+        }
+        .settings-card .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .settings-card .form-label {
+            font-weight: 600;
+            font-size: 0.95rem; /* Mengubah ukuran font label form */
+        }
         .settings-card .bg-option {
             height: 80px;
             border-radius: 0.75rem;
@@ -1386,9 +1444,9 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
         }
         /* Style baru untuk halaman About Us */
         .about-us-section p.lead {
-    font-size: 1.15rem; /* Ukuran font standar */
-    line-height: 1.5;
-}
+            font-size: 1.15rem; /* Ukuran font standar */
+            line-height: 1.5;
+        }
         .about-us-section h2, .about-us-section h3 {
             font-weight: 700;
         }
@@ -2225,17 +2283,17 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                                 <input type="email" id="emailInput" class="form-control" value="<?= htmlspecialchars($user_data->email ?? '') ?>">
                             </div>
                             <div class="text-center">
-    <button class="btn btn-primary btn-md" id="saveProfileButton"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
-</div>
+                                <button class="btn btn-primary btn-md" id="saveProfileButton"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
+                            </div>
                         </div>
 
                         <div class="card settings-card">
                             <h4><i class="bi bi-person-gear me-2"></i>Aksi Akun</h4>
                             <div class="text-center">
-    <a href="<?= site_url('todo/logout') ?>" class="btn btn-danger btn-lg">
-        <i class="bi bi-box-arrow-right me-2"></i>Keluar Akun
-    </a>
-</div>
+                                <a href="<?= site_url('todo/logout') ?>" class="btn btn-danger btn-lg">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Keluar Akun
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -2336,10 +2394,10 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                             Platform ini dirancang untuk memberikan kontrol penuh atas daftar tugas harian, mulai dari yang sederhana hingga yang paling kompleks. Dengan fokus pada antarmuka yang bersih dan fitur yang intuitif, List'in menjadi solusi ideal bagi siapa pun yang ingin tetap teratur dan fokus.
                             </p>
                            <div class="d-flex justify-content-center">
-    <a href="<?= site_url('todo/index') ?>?section=tasks" class="btn btn-olive mt-4 shadow-sm animate-button">
-        <i class="bi bi-plus-circle me-2"></i>Mulai Tambah Tugas Pertama Anda!
-    </a>
-</div>
+                                <a href="<?= site_url('todo/index') ?>?section=tasks" class="btn btn-olive mt-4 shadow-sm animate-button">
+                                    <i class="bi bi-plus-circle me-2"></i>Mulai Tambah Tugas Pertama
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -2410,7 +2468,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
     };
 
     /**
-     * Menampilkan notifikasi toast di tengah atas.
+     * Menampilkan notifikasi toast di tengah atas dengan desain yang lebih menarik.
      * @param {string} message Pesan yang akan ditampilkan.
      * @param {string} type Tipe notifikasi: 'success', 'info', 'warning', 'danger'.
      */
@@ -2418,41 +2476,31 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
         const toastContainer = document.getElementById('toastContainer');
         const toastId = 'toast-' + Date.now();
         
-        let headerBgClass;
         let iconClass;
         let titleText;
 
         switch(type) {
             case 'success':
-                headerBgClass = 'bg-success text-white';
                 iconClass = 'bi-check-circle-fill';
                 titleText = 'Berhasil!';
                 break;
             case 'danger':
-                headerBgClass = 'bg-danger text-white';
                 iconClass = 'bi-exclamation-octagon-fill';
                 titleText = 'Gagal!';
                 break;
             case 'warning':
-                headerBgClass = 'bg-warning text-dark';
                 iconClass = 'bi-exclamation-triangle-fill';
                 titleText = 'Peringatan!';
                 break;
             default: // info
-                headerBgClass = 'bg-info text-white';
                 iconClass = 'bi-info-circle-fill';
                 titleText = 'Informasi';
                 break;
         }
         
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        if (isDarkMode) {
-            headerBgClass = headerBgClass.replace('text-dark', 'text-white');
-        }
-
         const toastHtml = `
-            <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header ${headerBgClass}">
+            <div id="${toastId}" class="toast toast-${type}" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
                     <i class="bi ${iconClass} me-2"></i>
                     <strong class="me-auto">${titleText}</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -2467,7 +2515,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
 
         const toastEl = document.getElementById(toastId);
         const toast = new bootstrap.Toast(toastEl, {
-            delay: 1400
+            delay: 3000
         });
         toast.show();
 
