@@ -922,11 +922,6 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
             .welcome-section p { font-size: 1rem; }
             .welcome-section .btn { font-size: 0.9rem; padding: 0.6rem 1.5rem; }
             .section-title { margin-top: 1.5rem; }
-            .table th, .table td {
-                font-size: 0.8em;
-                padding: 0.4rem;
-            }
-            /* Menyesuaikan tampilan tabel untuk layar HP */
             .table thead {
                 display: none;
             }
@@ -1896,11 +1891,11 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                     <?php else: ?>
                         <?php foreach ($todos as $todo): ?>
                             <tr class="table-row-priority-<?= strtolower($todo->priority) ?>">
-                                <td class="task-details text-start">
+                                <td class="task-details text-start" data-label="Tugas">
                                     <strong class="table-task-title"><?= htmlspecialchars($todo->title) ?></strong>
                                     <small class="table-task-description d-block"><?= nl2br(htmlspecialchars($todo->description)) ?></small>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" data-label="Deadline">
                                     <?php
                                         $deadline_class = '';
                                         $deadline_obj = new DateTime($todo->deadline);
@@ -1923,7 +1918,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                                         }
                                     ?>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" data-label="Prioritas">
                                     <?php
                                         $priorityClass = 'priority-' . strtolower($todo->priority);
                                         $priorityIcon = '';
@@ -1938,7 +1933,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                                         <span class="priority-label <?= $priorityClass ?>"><?= ucfirst($todo->priority) ?></span>
                                     </div>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" data-label="Status">
                                     <?php
                                         $statusBadgeClass = '';
                                         $statusIcon = '';
@@ -1953,7 +1948,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                                         <?= ucfirst($todo->status) ?>
                                     </span>
                                 </td>
-                                <td class="task-actions-cell text-center">
+                                <td class="task-actions-cell text-center" data-label="Aksi">
                                     <div class="d-flex flex-column gap-1">
                                         <div class="btn-group btn-group-sm w-100" role="group">
                                             <a href="<?= site_url('todo/set_status/'.$todo->id.'/belum') ?>?section=tasks&task_view=<?= htmlspecialchars($current_task_view) ?>" class="btn btn-outline-secondary btn-set-status" data-status-type="belum">Belum</a>
@@ -2263,44 +2258,49 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
         <?php if ($current_section == 'settings'): ?>
             <div class="settings-page">
                 <div class="row">
-                    <div class="col-lg-6 mb-4">
-                        <div class="card settings-card">
-                            <h4><i class="bi bi-person-circle me-2"></i>Informasi Akun</h4>
-                            <div class="profile-section">
-                                <img src="<?= $profile_pic_url ?>" alt="Foto Profil" class="profile-pic" id="profilePic" data-bs-toggle="modal" data-bs-target="#profilePicModal">
-                                <div class="profile-info">
-                                    <h5 id="profileUsername"><?= htmlspecialchars($user_data->username ?? 'Pengguna') ?></h5>
-                                    <p id="profileEmail"><?= htmlspecialchars($user_data->email ?? 'email@contoh.com') ?></p>
-                                    <form id="uploadProfilePicForm" action="<?= site_url('todo/upload_profile_picture') ?>" method="post" enctype="multipart/form-data">
-                                        <label for="profilePicInput" class="btn btn-sm btn-outline-secondary mt-2"><i class="bi bi-image me-2"></i>Ganti Foto Profil</label>
-                                        <input type="file" id="profilePicInput" name="profile_picture" class="d-none" accept="image/*">
-                                    </form>
+                    <div class="col-lg-6 order-lg-1">
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <div class="card settings-card">
+                                    <h4><i class="bi bi-person-circle me-2"></i>Informasi Akun</h4>
+                                    <div class="profile-section">
+                                        <img src="<?= $profile_pic_url ?>" alt="Foto Profil" class="profile-pic" id="profilePic" data-bs-toggle="modal" data-bs-target="#profilePicModal">
+                                        <div class="profile-info">
+                                            <h5 id="profileUsername"><?= htmlspecialchars($user_data->username ?? 'Pengguna') ?></h5>
+                                            <p id="profileEmail"><?= htmlspecialchars($user_data->email ?? 'email@contoh.com') ?></p>
+                                            <form id="uploadProfilePicForm" action="<?= site_url('todo/upload_profile_picture') ?>" method="post" enctype="multipart/form-data">
+                                                <label for="profilePicInput" class="btn btn-sm btn-outline-secondary mt-2"><i class="bi bi-image me-2"></i>Ganti Foto Profil</label>
+                                                <input type="file" id="profilePicInput" name="profile_picture" class="d-none" accept="image/*">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="usernameInput" class="form-label">Username</label>
+                                        <input type="text" id="usernameInput" class="form-control" value="<?= htmlspecialchars($user_data->username ?? '') ?>">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="emailInput" class="form-label">Email</label>
+                                        <input type="email" id="emailInput" class="form-control" value="<?= htmlspecialchars($user_data->email ?? '') ?>">
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-primary btn-md" id="saveProfileButton"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mb-4">
-                                <label for="usernameInput" class="form-label">Username</label>
-                                <input type="text" id="usernameInput" class="form-control" value="<?= htmlspecialchars($user_data->username ?? '') ?>">
-                            </div>
-                            <div class="mb-4">
-                                <label for="emailInput" class="form-label">Email</label>
-                                <input type="email" id="emailInput" class="form-control" value="<?= htmlspecialchars($user_data->email ?? '') ?>">
-                            </div>
-                            <div class="text-center">
-                                <button class="btn btn-primary btn-md" id="saveProfileButton"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
-                            </div>
-                        </div>
-
-                        <div class="card settings-card">
-                            <h4><i class="bi bi-person-gear me-2"></i>Aksi Akun</h4>
-                            <div class="text-center">
-                                <a href="<?= site_url('todo/logout') ?>" class="btn btn-danger btn-lg">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Keluar Akun
-                                </a>
+                            <div class="col-12 mb-4 d-lg-block d-none">
+                                <div class="card settings-card">
+                                    <h4><i class="bi bi-person-gear me-2"></i>Aksi Akun</h4>
+                                    <div class="text-center">
+                                        <a href="<?= site_url('todo/logout') ?>" class="btn btn-danger btn-lg">
+                                            <i class="bi bi-box-arrow-right me-2"></i>Keluar Akun
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-lg-6 mb-4">
+                    
+                    <div class="col-lg-6 mb-4 order-lg-2">
                         <div class="card settings-card">
                             <h4><i class="bi bi-palette me-2"></i>Tampilan & Estetika</h4>
                             <div class="form-group">
@@ -2379,8 +2379,18 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-6 mb-4 d-lg-none d-block">
+                        <div class="card settings-card">
+                            <h4><i class="bi bi-person-gear me-2"></i>Aksi Akun</h4>
+                            <div class="text-center">
+                                <a href="<?= site_url('todo/logout') ?>" class="btn btn-danger btn-lg">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Keluar Akun
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
             </div>
         <?php endif; ?>
         
