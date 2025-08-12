@@ -926,6 +926,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                 font-size: 0.8em;
                 padding: 0.4rem;
             }
+            /* Menyesuaikan tampilan tabel untuk layar HP */
             .table thead {
                 display: none;
             }
@@ -935,9 +936,11 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                 padding: 0.5rem;
                 border: 1px solid #dee2e6;
                 border-radius: 0.5rem;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Menambah shadow pada baris di HP */
             }
             .dark-mode .table tbody tr {
                 border-color: var(--border-dark-mode);
+                box-shadow: 0 4px 8px var(--shadow-dark-mode);
             }
             .table td {
                 display: block;
@@ -2380,7 +2383,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                 
             </div>
         <?php endif; ?>
-
+        
         <?php if ($current_section == 'about'): ?>
             <div class="about-us-section">
                 <div class="row g-4">
