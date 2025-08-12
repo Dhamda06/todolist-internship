@@ -210,25 +210,67 @@ class Todo extends CI_Controller {
     }
 
     // --- Endpoint API untuk Settings (Menggunakan JSON response) ---
-    // ... Metode upload_profile_picture() dan update_profile() tidak perlu diubah ...
     public function upload_profile_picture() {
-        // ... (kode yang sudah ada) ...
+        if (!$this->session->userdata('logged_in')) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['success' => false, 'error' => 'Anda tidak memiliki akses.']));
+            return;
+        }
+        
+        $userId = $this->session->userdata('user_id');
+        $upload_path = './asset/images/profiles/';
+        
+        // Pastikan folder upload ada, jika tidak, buat
+        if (!is_dir($upload_path)) {
+            mkdir($upload_path, 0775, TRUE);
+        }
+
+        // Konfigurasi library upload CodeIgniter
+        $config['upload_path']   = $upload_path;
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size']      = 2048; // 2MB
+        $config['file_name']     = 'profile_' . $userId . '_' . time(); // Nama file unik
+
+        $this->load->library('upload', $config);
+
         if (!$this->upload->do_upload('profile_picture')) {
-            $error = array('error' => $this->upload->display_errors('', ''));
-            echo json_encode(['success' => false, 'error' => strip_tags($error['error'])]);
+            // Jika upload gagal, kirim pesan error dari library upload
+            $error = $this->upload->display_errors('', '');
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['success' => false, 'error' => strip_tags($error)]));
+            return;
         } else {
+            // Jika upload berhasil
             $upload_data = $this->upload->data();
             $file_name = $upload_data['file_name'];
-            $user = $this->User_model->get_user_by_id($this->session->userdata('user_id'));
+
+            // Ambil data user saat ini untuk memeriksa foto lama
+            $user = $this->User_model->get_user_by_id($userId);
+            
+            // Hapus foto lama jika ada dan bukan foto default
             if ($user && !empty($user->profile_picture) && $user->profile_picture !== 'default_profile.png') {
-                $old_file = $upload_path . $user->profile_picture;
+                $old_file = FCPATH . $upload_path . $user->profile_picture;
                 if (file_exists($old_file)) {
                     unlink($old_file);
                 }
             }
-            $this->User_model->update_profile_picture($this->session->userdata('user_id'), $file_name);
+
+            // Perbarui nama file baru di database
+            $this->User_model->update_profile_picture($userId, $file_name);
+            
+            // Perbarui sesi untuk tampilan instan tanpa refresh
             $this->session->set_userdata('profile_picture', $file_name);
-            echo json_encode(['success' => true, 'file_name' => $file_name]);
+
+            // Kirim respons sukses dalam format JSON
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode([
+                    'success' => true,
+                    'message' => 'Foto profil berhasil diperbarui!',
+                    'file_name' => $file_name
+                 ]));
         }
     }
 
@@ -270,7 +312,6 @@ class Todo extends CI_Controller {
     }
 
     // --- Metode Manajemen Tugas ---
-    // ... Metode-metode terkait tugas (add, edit, set_status, dll) tidak perlu diubah ...
     public function add() {
         if (!$this->session->userdata('logged_in')) {
             echo json_encode(['success' => false, 'error' => 'Not authenticated.']);
