@@ -916,7 +916,24 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
             .stats-card h6 { font-size: 0.8rem; }
             .stats-card p { font-size: 1.8rem; }
             .stats-card .stats-icon { font-size: 2.5rem; margin-bottom: 0.3rem; }
-            .row.row-cols-1 > .col { flex: 0 0 auto; width: 100%; }
+            
+            /* Corrected CSS for statistics page cards */
+            .stats-card-container-sm {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                justify-content: space-between;
+                align-items: stretch;
+            }
+            .stats-card-container-sm .col {
+                flex-basis: 30%;
+                max-width: 30%;
+            }
+            .stats-card-container-sm .col:nth-child(2) {
+                flex-grow: 1;
+            }
+
             .welcome-section { padding: 2rem 1rem; }
             .welcome-section h2 { font-size: 1.8rem; }
             .welcome-section p { font-size: 1rem; }
@@ -1275,7 +1292,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
             justify-content: center;
         }
         .settings-card .bg-option[data-bg="none"]::after {
-            content: 'Tidak ada';
+            content: 'Default';
             font-family: 'Inter', sans-serif;
             color: var(--text-light);
             font-size: 1rem;
@@ -2112,14 +2129,12 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
 
         <?php if ($current_section == 'statistics'): ?>
             <h5 class="section-title">📊 Gambaran Umum Status Tugas</h5>
-            <div class="d-flex justify-content-center mb-3">
-                <button class="btn <?= ($current_stats_view == 'card') ? 'btn-olive' : 'btn-outline-olive' ?>" id="toggleCardStats"
-                        onclick="toggleStatsView('card')">Tampilan Kartu</button>
-                <button class="btn <?= ($current_stats_view == 'chart') ? 'btn-olive' : 'btn-outline-olive' ?> ms-2" id="toggleChartStats"
-                        onclick="toggleStatsView('chart')">Tampilan Diagram Lingkaran</button>
+            <div class="d-flex justify-content-center mb-3 flex-wrap gap-2">
+                <a href="<?= site_url('todo/index') ?>?section=statistics&stats_view=card" class="btn <?= ($current_stats_view == 'card') ? 'btn-olive' : 'btn-outline-olive' ?>" >Tampilan Kartu</a>
+                <a href="<?= site_url('todo/index') ?>?section=statistics&stats_view=chart" class="btn <?= ($current_stats_view == 'chart') ? 'btn-olive' : 'btn-outline-olive' ?>">Tampilan Diagram Lingkaran</a>
             </div>
             
-            <div id="cardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center <?= ($current_stats_view == 'card') ? '' : 'd-none' ?>">
+            <div id="cardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center <?= ($current_stats_view == 'card') ? '' : 'd-none' ?> stats-card-container-sm">
                 <div class="col">
                     <div class="p-3 rounded-3 stats-card belum">
                         <i class="bi bi-hourglass-split stats-icon"></i>
@@ -2152,7 +2167,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
             <hr class="my-4">
 
             <h5 class="section-title">🌟 Tugas Berdasarkan Prioritas</h5>
-            <div id="priorityCardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center">
+            <div id="priorityCardStatsContainer" class="row row-cols-1 row-cols-md-3 g-3 mb-4 text-center stats-card-container-sm">
                 <div class="col">
                     <div class="p-3 rounded-3 stats-card priority-high">
                         <i class="bi bi-exclamation-octagon-fill stats-icon"></i>
@@ -2180,12 +2195,12 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
 
             <h5 class="section-title">📅 Diagram Tugas Harian (7 Hari ke Depan)</h5>
             <div class="d-flex justify-content-center mb-3">
-                <button class="btn daily-chart-view-toggle <?= ($current_daily_chart_view == 'status') ? 'btn-olive' : 'btn-outline-olive' ?>" data-view="status">
+                <a href="<?= site_url('todo/index') ?>?section=statistics&stats_view=chart&daily_chart_view=status" class="btn daily-chart-view-toggle <?= ($current_daily_chart_view == 'status') ? 'btn-olive' : 'btn-outline-olive' ?>" data-view="status">
                     Berdasarkan Status
-                </button>
-                <button class="btn daily-chart-view-toggle <?= ($current_daily_chart_view == 'priority') ? 'btn-olive' : 'btn-outline-olive' ?> ms-2" data-view="priority">
+                </a>
+                <a href="<?= site_url('todo/index') ?>?section=statistics&stats_view=chart&daily_chart_view=priority" class="btn daily-chart-view-toggle <?= ($current_daily_chart_view == 'priority') ? 'btn-olive' : 'btn-outline-olive' ?> ms-2" data-view="priority">
                     Berdasarkan Prioritas
-                </button>
+                </a>
             </div>
             <div id="dailyTaskChartContainer">
                 <canvas id="dailyTaskChart"></canvas>
@@ -3065,13 +3080,11 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
     function toggleStatsView(view) {
         const cardContainer = document.getElementById('cardStatsContainer');
         const chartContainer = document.getElementById('chartStatsContainer');
-        const toggleCardBtn = document.getElementById('toggleCardStats');
-        const toggleChartBtn = document.getElementById('toggleChartStats');
+        const toggleCardBtn = document.querySelector('a[href*="stats_view=card"]');
+        const toggleChartBtn = document.querySelector('a[href*="stats_view=chart"]');
 
         if (view === 'card') {
             cardContainer.classList.remove('d-none');
-            cardContainer.classList.add('d-block');
-            chartContainer.classList.remove('d-block');
             chartContainer.classList.add('d-none');
             toggleCardBtn.classList.add('btn-olive');
             toggleCardBtn.classList.remove('btn-outline-olive');
@@ -3079,24 +3092,18 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
             toggleChartBtn.classList.add('btn-outline-olive');
             if (doughnutChartInstance) doughnutChartInstance.destroy();
         } else if (view === 'chart') {
-            cardContainer.classList.remove('d-block');
             cardContainer.classList.add('d-none');
             chartContainer.classList.remove('d-none');
-            chartContainer.classList.add('d-block');
             toggleCardBtn.classList.remove('btn-olive');
             toggleCardBtn.classList.add('btn-outline-olive');
             toggleChartBtn.classList.add('btn-olive');
             toggleChartBtn.classList.remove('btn-outline-olive');
             createDoughnutChart();
         }
-        const url = new URL(window.location.href);
-        url.searchParams.set('stats_view', view);
-        window.history.replaceState({}, '', url.toString());
     }
 
     function toggleDailyChartType(type) {
         createDailyTaskChart(type);
-
         const toggleButtons = document.querySelectorAll('.daily-chart-view-toggle');
         toggleButtons.forEach(btn => {
             if (btn.dataset.view === type) {
@@ -3107,9 +3114,6 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                 btn.classList.add('btn-outline-olive');
             }
         });
-        const url = new URL(window.location.href);
-        url.searchParams.set('daily_chart_view', type);
-        window.history.replaceState({}, '', url.toString());
     }
 
     function toggleTaskView(view) {
@@ -3332,10 +3336,26 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
             }
 
             document.querySelectorAll('.daily-chart-view-toggle').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
                     const viewType = this.dataset.view;
+                    const statsView = new URLSearchParams(this.href).get('stats_view');
                     toggleDailyChartType(viewType);
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('daily_chart_view', viewType);
+                    url.searchParams.set('stats_view', statsView);
+                    window.history.replaceState({}, '', url.toString());
                 });
+            });
+             
+            // Event listener for main stats toggle buttons
+            document.querySelector('a[href*="stats_view=card"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleStatsView('card');
+            });
+            document.querySelector('a[href*="stats_view=chart"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleStatsView('chart');
             });
         }
         
