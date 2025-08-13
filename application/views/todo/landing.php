@@ -141,8 +141,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* Padding atas dan bawah diperbaiki */
-            padding: 5rem 2rem 2rem; 
+            padding: 10rem 2rem 5rem;
             text-align: center;
             animation: fadeIn 1s ease-out;
             background-color: var(--body-bg-light);
@@ -180,15 +179,13 @@
         h2 {
             font-size: 1.8rem;
             font-weight: 700;
-            /* Margin diperbaiki */
-            margin-bottom: 1rem; 
+            margin-bottom: 1rem;
         }
         
         p.lead {
             font-size: 1.25rem;
             color: #6c757d;
-            /* Margin diperbaiki */
-            margin-bottom: 1.5rem; 
+            margin-bottom: 1.5rem;
             transition: color 0.4s ease-in-out;
         }
 
@@ -240,33 +237,118 @@
         .dark-mode .btn-login {
             border-color: #a7d129;
             color: #a7d129;
-            padding: calc(0.6rem - 2px) calc(2rem - 2px);
         }
         
         .dark-mode .btn-login:hover {
             background-image: var(--gradient-main);
             border: none;
             color: var(--text-light);
-            padding: 0.6rem 2rem;
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(167, 209, 41, 0.4);
         }
+        
+        /* ====================================================================== */
+        /* Gaya Carousel Kustom */
+        /* ====================================================================== */
+        .hero-carousel {
+            max-width: 750px; /* Lebar lebih besar */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .carousel-inner img {
+            height: 270px; /* Tinggi konsisten */
+            object-fit: cover; /* Memastikan gambar terisi penuh tanpa distorsi */
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: var(--primary-olive);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.7;
+        }
+        
+        .carousel-control-prev {
+            left: -17.5px;
+        }
+
+        .carousel-control-next {
+            right: -17.5px;
+        }
+
+        /* Hover effect for carousel controls */
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            background-color: var(--primary-olive);
+            color: var(--text-light);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            transform: translateY(-50%) scale(1.1);
+            opacity: 1;
+        }
+
+        /* Perubahan warna panah */
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: invert(45%) sepia(35%) saturate(300%) hue-rotate(30deg) brightness(85%) contrast(80%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .carousel-control-prev:hover .carousel-control-prev-icon,
+        .carousel-control-next:hover .carousel-control-next-icon {
+            filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(251deg) brightness(103%) contrast(100%);
+        }
+
+        /* Dark Mode styles for carousel controls */
+        .dark-mode .carousel-control-prev,
+        .dark-mode .carousel-control-next {
+            background-color: rgba(46, 58, 71, 0.8);
+            color: var(--text-light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .dark-mode .carousel-control-prev:hover,
+        .dark-mode .carousel-control-next:hover {
+            background-color: #a7d129;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        /* Filter untuk ikon di dark mode */
+        .dark-mode .carousel-control-prev-icon,
+        .dark-mode .carousel-control-next-icon {
+            filter: invert(80%) sepia(100%) saturate(1000%) hue-rotate(75deg) brightness(120%) contrast(100%);
+        }
+
+        .dark-mode .carousel-control-prev:hover .carousel-control-prev-icon,
+        .dark-mode .carousel-control-next:hover .carousel-control-next-icon {
+            filter: none;
+        }
 
         /* ====================================================================== */
-        /* Kartu Fitur (Dengan Scroll Horizontal dan Tombol Panah) */
+        /* Bagian Fitur (Dengan Scroll Horizontal dan Tombol Panah) */
         /* ====================================================================== */
         .features-section {
-padding: 2rem 2rem;
-background-color: rgba(255, 255, 255, 0.4);
-transition: background-color 0.4s ease-in-out;
-backdrop-filter: blur(2px); /* Added subtle blur */
-}
+            padding: 4rem 2rem;
+            background-color: rgba(255, 255, 255, 0.4);
+            transition: background-color 0.4s ease-in-out;
+            backdrop-filter: blur(2px);
+        }
 
-.dark-mode .features-section {
-background-color: rgba(46, 58, 71, 0.4);
-backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
-}
-
+        .dark-mode .features-section {
+            background-color: rgba(46, 58, 71, 0.4);
+            backdrop-filter: blur(2px);
+        }
+        
         .features-container-wrapper {
             position: relative;
             max-width: 1200px;
@@ -417,6 +499,15 @@ backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
         .dark-mode .feature-card p {
             color: #adb5bd;
         }
+        
+        /* ====================================================================== */
+        /* Bagian CTA Baru */
+        /* ====================================================================== */
+        .cta-section {
+            background-image: var(--gradient-main);
+            color: white;
+            padding: 5rem 2rem;
+        }
 
         /* ====================================================================== */
         /* Footer */
@@ -478,9 +569,9 @@ backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
                 <a class="navbar-brand" href="#">
                     <h1 class="m-0">List'in</h1>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                </button>
+                </button> -->
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav align-items-center gap-3">
                         <li class="nav-item">
@@ -492,30 +583,52 @@ backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
                         <li class="nav-item">
                             <a class="nav-link" href="#">Tentang</a>
                         </li>
-                        <li class="nav-item d-flex align-items-center d-lg-none">
-                            <i id="dark-mode-toggle" class="bi bi-moon-fill dark-mode-toggle me-3"></i>
-                        </li>
                     </ul>
-                </div>
-                <div class="d-none d-lg-flex align-items-center gap-3">
-                    <i id="dark-mode-toggle-desktop" class="bi bi-moon-fill dark-mode-toggle"></i>
                 </div>
             </div>
         </nav>
     </header>
 
-    <main class="hero-section">
+    <main class="hero-section d-flex align-items-center justify-content-center">
         <div class="container">
-            <h1 class="main-title">List'in</h1>
-            <h2>Bekerja Lebih Teratur, Capai Lebih Banyak</h2>
-            <p class="lead">Kelola tugas harian dengan aplikasi manajemen yang dirancang untuk meningkatkan produktivitas dan menjaga fokus pada prioritas utama</p>
-            <div class="d-flex justify-content-center gap-4 flex-wrap">
-                <a href="<?= site_url('todo/register') ?>" class="btn btn-register btn-action">
-                    <i class="bi bi-person-add me-2"></i>Daftar Sekarang
-                </a>
-                <a href="<?= site_url('todo/login') ?>" class="btn btn-login btn-action">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
-                </a>
+            <div class="row align-items-center">
+                <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+                    <h1 class="main-title">List'in</h1>
+                    <h2 class="h3 fw-bold">Bekerja Lebih Teratur, Capai Lebih Banyak</h2>
+                    <p class="lead text-muted">Kelola tugas harian dengan aplikasi manajemen yang dirancang untuk meningkatkan produktivitas dan menjaga fokus pada prioritas utama.</p>
+                    <div class="d-flex justify-content-center justify-content-lg-start gap-3 mt-4">
+                        <a href="<?= site_url('todo/register') ?>" class="btn btn-register btn-action"><i class="bi bi-person-add me-2"></i>Daftar Sekarang</a>
+                        <a href="<?= site_url('todo/login') ?>" class="btn btn-login btn-action"><i class="bi bi-box-arrow-in-right me-2"></i>Masuk</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-flex justify-content-center">
+                    <div id="hero-carousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        </div>
+                        <div class="carousel-inner rounded-4 shadow-lg">
+                            <div class="carousel-item active">
+                                <img src="<?= base_url('asset/images/dftr.jpg') ?>" class="d-block w-100" alt="Ilustrasi pertama">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="<?= base_url('asset/images/tgs.jpg') ?>" class="d-block w-100" alt="Ilustrasi kedua">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="<?= base_url('asset/images/hm.jpg') ?>" class="d-block w-100" alt="Ilustrasi ketiga">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -529,35 +642,35 @@ backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
                 <button id="scroll-left" class="scroll-arrow"><i class="bi bi-chevron-left"></i></button>
                 <div class="features-scroll-container" id="features-scroll-container">
                     <div class="feature-card-wrapper">
-                        <div class="feature-card">
+                        <div class="feature-card text-center">
                             <i class="bi bi-list-check"></i>
                             <h3 class="mt-3">Organisasi Mudah</h3>
                             <p>Atur daftar tugas dengan prioritas dan deadline yang jelas.</p>
                         </div>
                     </div>
                     <div class="feature-card-wrapper">
-                        <div class="feature-card">
+                        <div class="feature-card text-center">
                             <i class="bi bi-graph-up"></i>
                             <h3 class="mt-3">Analisis Statistik</h3>
                             <p>Dapatkan wawasan berharga tentang kebiasaan dan kemajuan Anda.</p>
                         </div>
                     </div>
                     <div class="feature-card-wrapper">
-                        <div class="feature-card">
+                        <div class="feature-card text-center">
                             <i class="bi bi-lightning-charge"></i>
                             <h3 class="mt-3">Tingkatkan Fokus</h3>
                             <p>Selesaikan lebih banyak hal dengan antarmuka yang bersih dan bebas gangguan.</p>
                         </div>
                     </div>
                     <div class="feature-card-wrapper">
-                        <div class="feature-card">
+                        <div class="feature-card text-center">
                             <i class="bi bi-bell"></i>
-                            <h3 class="mt-3">Pengingat Cerdas</h3>
+                            <h3 class="mt-3">Pengingat Cerdas </h3>
                             <p>Dapatkan notifikasi dan pengingat yang disesuaikan agar tidak ada tugas yang terlewat.</p>
                         </div>
                     </div>
                     <div class="feature-card-wrapper">
-                        <div class="feature-card">
+                        <div class="feature-card text-center">
                             <i class="bi bi-person-workspace"></i>
                             <h3 class="mt-3">Kolaborasi Tim</h3>
                             <p>Bagikan daftar tugas dan proyek dengan rekan tim untuk bekerja sama lebih efektif.</p>
@@ -574,7 +687,7 @@ backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h5>Tentang List'in</h5>
-                    <p>Aplikasi manajemen tugas yang membantu mengorganisir pekerjaan, melacak kemajuan, dan meningkatkan produktivitas setiap hari</p>
+                    <p>Aplikasi manajemen tugas yang membantu mengorganisir pekerjaan, melacak kemajuan, dan meningkatkan produktivitas setiap hari.</p>
                 </div>
                 <div class="col-md-2 mb-4">
                     <h5>Navigasi</h5>
@@ -588,7 +701,7 @@ backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
                     <h5>Hubungi Kami</h5>
                     <ul class="nav flex-column">
                         <li class="nav-item"><a href="mailto:info@listin.com" class="nav-link p-0"><i class="bi bi-envelope me-2"></i>listin.com</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link p-0"><i class="bi bi-geo-alt me-2"></i>Jl.in Aja Dulu No. 123, Jakarta</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link p-0"><i class="bi bi-geo-alt me-2"></i>Bandung</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-4">
@@ -668,28 +781,24 @@ backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
             };
             window.addEventListener('scroll', handleScroll);
             
-            // --- Fungsionalitas Scroll Horizontal ---
             const scrollContainer = document.getElementById('features-scroll-container');
             const scrollLeftBtn = document.getElementById('scroll-left');
             const scrollRightBtn = document.getElementById('scroll-right');
-            const scrollStep = 300; // Jarak scroll setiap kali tombol ditekan
+            const scrollStep = 300;
 
             const updateArrows = () => {
-                if (scrollContainer.scrollWidth > scrollContainer.clientWidth) {
-                    // Konten bisa di-scroll
+                if (window.innerWidth >= 992 && scrollContainer.scrollWidth > scrollContainer.clientWidth) {
                     scrollLeftBtn.style.display = 'flex';
                     scrollRightBtn.style.display = 'flex';
 
-                    // Atur opacity berdasarkan posisi scroll
                     const isAtLeft = scrollContainer.scrollLeft === 0;
                     const isAtRight = Math.round(scrollContainer.scrollLeft + scrollContainer.clientWidth) >= scrollContainer.scrollWidth;
 
-                    scrollLeftBtn.style.opacity = isAtLeft ? '0' : '1';
-                    scrollRightBtn.style.opacity = isAtRight ? '0' : '1';
-                    scrollLeftBtn.style.pointerEvents = isAtLeft ? 'none' : 'auto';
-                    scrollRightBtn.style.pointerEvents = isAtRight ? 'none' : 'auto';
+                    scrollLeftBtn.style.opacity = isAtLeft ? '0.4' : '1';
+                    scrollRightBtn.style.opacity = isAtRight ? '0.4' : '1';
+                    scrollLeftBtn.disabled = isAtLeft;
+                    scrollRightBtn.disabled = isAtRight;
                 } else {
-                    // Konten tidak bisa di-scroll
                     scrollLeftBtn.style.display = 'none';
                     scrollRightBtn.style.display = 'none';
                 }
@@ -706,7 +815,7 @@ backdrop-filter: blur(2px); /* Added subtle blur for dark mode */
             scrollContainer.addEventListener('scroll', updateArrows);
             window.addEventListener('resize', updateArrows);
             
-            updateArrows(); // Panggil saat DOM selesai dimuat
+            updateArrows();
         });
     </script>
 </body>

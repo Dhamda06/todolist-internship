@@ -2418,7 +2418,7 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                         <div class="card about-us-card h-100 shadow-sm animate-on-scroll">
                             <h2><i class="bi bi-stars me-2"></i>Fitur Unggulan</h2>
                             <p class="lead">
-                                Temukan fitur-fitur yang membuat List'in menjadi pilihan tepat untuk produktivitas Anda.
+                                Temukan fitur-fitur yang membuat List'in menjadi pilihan tepat untuk produktivitas.
                             </p>
                             
                             <div class="row row-cols-1 row-cols-md-3 g-3 text-center">
@@ -2426,21 +2426,21 @@ $theme_class = ($user_settings->theme ?? 'light') == 'dark' ? 'dark-mode' : '';
                                     <div class="feature-card">
                                         <i class="bi bi-check-lg feature-icon"></i>
                                         <h5>Manajemen Tugas Intuitif</h5>
-                                        <p class="mb-0">Atur tugas Anda dengan mudah, tambahkan deskripsi, dan tandai prioritas. Semua dalam satu tempat yang rapi.</p>
+                                        <p class="mb-0">Atur tugas dengan mudah, tambahkan deskripsi, dan tandai prioritas. Semua dalam satu tempat yang rapi.</p>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="feature-card">
                                         <i class="bi bi-speedometer2 feature-icon"></i>
                                         <h5>Statistik Produktivitas</h5>
-                                        <p class="mb-0">Pantau kemajuan Anda dengan grafik dan ringkasan tugas yang komprehensif untuk tetap termotivasi.</p>
+                                        <p class="mb-0">Pantau kemajuan tugas dengan grafik yang komprehensif untuk tetap termotivasi.</p>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="feature-card">
                                         <i class="bi bi-palette-fill feature-icon"></i>
                                         <h5>Kustomisasi Tampilan</h5>
-                                        <p class="mb-0">Personalisasi tampilan aplikasi Anda dengan mode terang/gelap dan berbagai pilihan latar belakang.</p>
+                                        <p class="mb-0">Personalisasi tampilan aplikasi dengan mode terang/gelap dan berbagai pilihan latar belakang.</p>
                                     </div>
                                 </div>
                             </div>
