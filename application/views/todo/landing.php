@@ -257,14 +257,14 @@
         }
         
         .carousel-inner img {
-            height: 270px; /* Tinggi konsisten */
-            object-fit: cover; /* Memastikan gambar terisi penuh tanpa distorsi */
+            height: 300px; /* Tinggi konsisten */
+            
         }
 
         .carousel-control-prev,
         .carousel-control-next {
-            width: 30px;
-            height: 30px;
+            width: 30px; /* Ukuran tombol diperkecil */
+            height: 30px; /* Ukuran tombol diperkecil */
             border-radius: 50%;
             background-color: rgba(255, 255, 255, 0.8);
             color: var(--primary-olive);
@@ -277,11 +277,11 @@
         }
         
         .carousel-control-prev {
-            left: -17.5px;
+            left: -15px; /* Sesuaikan posisi panah kiri (setengah dari lebar) */
         }
 
         .carousel-control-next {
-            right: -17.5px;
+            right: -15px; /* Sesuaikan posisi panah kanan (setengah dari lebar) */
         }
 
         /* Hover effect for carousel controls */
@@ -301,7 +301,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.7rem; /* Ukuran ikon diperkecil */
         }
         
         .carousel-control-prev:hover .carousel-control-prev-icon,
@@ -333,6 +333,7 @@
         .dark-mode .carousel-control-next:hover .carousel-control-next-icon {
             filter: none;
         }
+
 
         /* ====================================================================== */
         /* Bagian Fitur (Dengan Scroll Horizontal dan Tombol Panah) */
@@ -519,9 +520,10 @@
             border-top: 1px solid rgba(0,0,0,0.1);
             transition: all 0.4s ease-in-out;
         }
-
+        
+        /* PERBAIKAN DARK MODE UNTUK FOOTER */
         .dark-mode .footer {
-            background-color: #2e3a47;
+            background-color: var(--card-dark);
             color: var(--text-light);
             border-top: 1px solid rgba(255,255,255,0.1);
         }
@@ -536,8 +538,11 @@
             transition: color 0.3s ease;
             text-decoration: none;
         }
-
-        .dark-mode .footer .nav-link, .dark-mode .footer p, .dark-mode .footer a {
+        
+        /* PERBAIKAN DARK MODE UNTUK LINK FOOTER */
+        .dark-mode .footer .nav-link, 
+        .dark-mode .footer p, 
+        .dark-mode .footer a {
             color: var(--text-light);
         }
 
@@ -569,9 +574,6 @@
                 <a class="navbar-brand" href="#">
                     <h1 class="m-0">List'in</h1>
                 </a>
-                <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button> -->
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav align-items-center gap-3">
                         <li class="nav-item">
